@@ -14,13 +14,20 @@ export class BlackJack extends Scene {
             torus: new defs.Torus(15, 15),
             torus2: new defs.Torus(3, 30),
             sphere: new defs.Subdivision_Sphere(4),
-            square: new defs.Square(),
+            square: new defs.Cube(),
+            table: new defs.Regular_2D_Polygon(100,100),
+            player: new defs.Regular_2D_Polygon(100,100),
+            one_card: new defs.Square()
         };
 
         // *** Materials
         this.materials = {
-            test: new Material(new defs.Phong_Shader(),
+            table: new Material(new defs.Phong_Shader(),
+                {ambient: 1, diffusivity: 1, color: hex_color("#0a6c03")}),
+            player: new Material(new defs.Phong_Shader(),
                 {ambient: 1, diffusivity: 1, color: hex_color("#ffffff")}),
+            cards: new Material(new defs.Phong_Shader(),
+                {ambient: 1, diffusivity: 1, color: hex_color("#ff0000")}),
             test2: new Material(new Gouraud_Shader(),
                 {ambient: .4, diffusivity: .6, color: hex_color("#992828")}),
         }
@@ -30,7 +37,11 @@ export class BlackJack extends Scene {
 
     make_control_panel() {
         // Draw the scene's buttons, setup their actions and keyboard shortcuts, and monitor live measurements.
-        
+        this.key_triggered_button("Bet 10", ["1"], () => this.attached = () => null);
+        this.key_triggered_button("Bet 50", ["2"], () => this.attached = () => null);
+        this.key_triggered_button("Bet 100", ["3"], () => this.attached = () => null);
+        this.new_line();
+        this.key_triggered_button("Deal Cards", ["0"], () => this.attached = () => 1);
     }
 
     display(context, program_state) {
@@ -52,12 +63,17 @@ export class BlackJack extends Scene {
         const light_position = vec4(0, 1, 0, 1);  
         // The parameters of the Light are: position, color, size
         program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 10)];
-
-        model_transform = model_transform.times(Mat4.scale(1, 1.5, 1));
-        this.shapes.square.draw(context, program_state, model_transform, this.materials.test.override({color: color(1, 1, 1, 1)}));
-        model_transform = model_transform.times(Mat4.translation(2.4, 0, 0));
-        this.shapes.square.draw(context, program_state, model_transform, this.materials.test.override({color: color(1, 1, 1, 1)}));
-       
+        model_transform = model_transform.times(Mat4.scale(.5, .5, .5)).times(Mat4.translation(0,-8,0.1));
+        this.shapes.player.draw(context, program_state, model_transform, this.materials.player);
+        model_transform = model_transform.times(Mat4.translation(0,8,-0.1)).times(Mat4.scale(2, 2, 1));
+        model_transform = model_transform.times(Mat4.scale(.7, .9, .9)).times(Mat4.translation(4,3,1));
+        this.shapes.square.draw(context, program_state, model_transform, this.materials.cards);
+        model_transform = model_transform.times(Mat4.translation(-4,-3,-1)).times(Mat4.scale(13, 6, 1));
+        this.shapes.table.draw(context, program_state, model_transform, this.materials.table);
+        if(this.attached && this.attached() !== null){
+            model_transform = Mat4.identity().times(Mat4.scale(.7, .9, 2)).times(Mat4.translation(4,3,.8));
+            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.cards);
+        }
     }
 }
 
