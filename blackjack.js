@@ -41,7 +41,7 @@ export class BlackJack extends Scene {
         this.key_triggered_button("Bet 50", ["2"], () => this.attached = () => null);
         this.key_triggered_button("Bet 100", ["3"], () => this.attached = () => null);
         this.new_line();
-        this.key_triggered_button("Deal Cards", ["0"], () => this.attached = () => 1);
+        this.key_triggered_button("Deal Cards", ["0"], () => this.deal = () => 1);
     }
 
     display(context, program_state) {
@@ -70,8 +70,17 @@ export class BlackJack extends Scene {
         this.shapes.square.draw(context, program_state, model_transform, this.materials.cards);
         model_transform = model_transform.times(Mat4.translation(-4,-3,-1)).times(Mat4.scale(13, 6, 1));
         this.shapes.table.draw(context, program_state, model_transform, this.materials.table);
-        if(this.attached && this.attached() !== null){
-            model_transform = Mat4.identity().times(Mat4.scale(.7, .9, 2)).times(Mat4.translation(4,3,.8));
+        if(this.deal && this.deal() !== null){
+            model_transform = Mat4.identity().times(Mat4.scale(.7, .9, 2)).times(Mat4.translation(4,3,.8)).times(Mat4.translation(-2.8, -4.5, 0));
+            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.cards);
+            
+            model_transform = Mat4.identity().times(Mat4.scale(.7, .9, 2)).times(Mat4.translation(4,3,.8)).times(Mat4.translation(-2.8, 0, 0));
+            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.cards);
+
+            model_transform = Mat4.identity().times(Mat4.scale(.7, .9, 2)).times(Mat4.translation(4,3,.8)).times(Mat4.translation(-5.2, -4.5, 0));
+            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.cards);
+
+            model_transform = Mat4.identity().times(Mat4.scale(.7, .9, 2)).times(Mat4.translation(4,3,.8)).times(Mat4.translation(-5.2, 0, 0));
             this.shapes.one_card.draw(context, program_state, model_transform, this.materials.cards);
         }
     }
