@@ -1,8 +1,10 @@
 import {defs, tiny} from './examples/common.js';
 
 const {
-    Vector, Vector3, vec, vec3, vec4, color, hex_color, Shader, Matrix, Mat4, Light, Shape, Material, Scene,
+    Vector, Vector3, vec, vec3, vec4, color, hex_color, Shader, Matrix, Mat4, Light, Shape, Material, Scene, Texture,
 } = tiny;
+
+const {Cube, Axis_Arrows, Textured_Phong} = defs
 
 export class BlackJack extends Scene {
     constructor() {
@@ -11,13 +13,10 @@ export class BlackJack extends Scene {
 
         // At the beginning of our program, load one of each of these shape definitions onto the GPU.
         this.shapes = {
-            torus: new defs.Torus(15, 15),
-            torus2: new defs.Torus(3, 30),
-            sphere: new defs.Subdivision_Sphere(4),
-            square: new defs.Cube(),
             table: new defs.Regular_2D_Polygon(100,100),
             player: new defs.Regular_2D_Polygon(100,100),
-            one_card: new defs.Square()
+            card_deck: new defs.Cube(),
+            one_card: new defs.Square(),
         };
 
         // *** Materials
@@ -26,10 +25,37 @@ export class BlackJack extends Scene {
                 {ambient: 1, diffusivity: 1, color: hex_color("#0a6c03")}),
             player: new Material(new defs.Phong_Shader(),
                 {ambient: 1, diffusivity: 1, color: hex_color("#ffffff")}),
-            cards: new Material(new defs.Phong_Shader(),
-                {ambient: 1, diffusivity: 1, color: hex_color("#ff0000")}),
-            test2: new Material(new Gouraud_Shader(),
-                {ambient: .4, diffusivity: .6, color: hex_color("#992828")}),
+            card_deck: new Material(new defs.Phong_Shader(),
+                {ambient: 1, diffusivity: 1, color: hex_color("#ffffff")}),
+            back: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/Back.jpg", "NEAREST"),}),
+            cA: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c01.png", "NEAREST"),}),
+            c2: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c02.png", "NEAREST"),}),
+            c3: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c03.png", "NEAREST"),}),
+            c4: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c04.png", "NEAREST"),}),
+            c5: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c05.png", "NEAREST"),}),
+            c6: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c06.png", "NEAREST"),}),
+            c7: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c07.png", "NEAREST"),}),
+            c8: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c08.png", "NEAREST"),}),
+            c9: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c09.png", "NEAREST"),}),
+            c10: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c10.png", "NEAREST"),}),
+            cJ: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c11_2.png", "NEAREST"),}),
+            cQ: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c11.png", "NEAREST"),}),
+            cK: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c13.png", "NEAREST"),}),
+            
         }
 
         this.initial_camera_location = Mat4.look_at(vec3(0, 0, 20), vec3(0, 0, 0), vec3(0, 1, 0));
@@ -67,22 +93,27 @@ export class BlackJack extends Scene {
         this.shapes.player.draw(context, program_state, model_transform, this.materials.player);
         model_transform = model_transform.times(Mat4.translation(0,8,-0.1)).times(Mat4.scale(2, 2, 1));
         model_transform = model_transform.times(Mat4.scale(.7, .9, .9)).times(Mat4.translation(4,3,1));
-        this.shapes.square.draw(context, program_state, model_transform, this.materials.cards);
+        this.shapes.card_deck.draw(context, program_state, model_transform, this.materials.card_deck);
         model_transform = model_transform.times(Mat4.translation(-4,-3,-1)).times(Mat4.scale(13, 6, 1));
         this.shapes.table.draw(context, program_state, model_transform, this.materials.table);
         if(this.deal && this.deal() !== null){
             model_transform = Mat4.identity().times(Mat4.scale(.7, .9, 2)).times(Mat4.translation(4,3,.8)).times(Mat4.translation(-2.8, -4.5, 0));
-            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.cards);
+            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.back);
             
             model_transform = Mat4.identity().times(Mat4.scale(.7, .9, 2)).times(Mat4.translation(4,3,.8)).times(Mat4.translation(-2.8, 0, 0));
-            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.cards);
+            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.c3);
 
             model_transform = Mat4.identity().times(Mat4.scale(.7, .9, 2)).times(Mat4.translation(4,3,.8)).times(Mat4.translation(-5.2, -4.5, 0));
-            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.cards);
+            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.cQ);
 
             model_transform = Mat4.identity().times(Mat4.scale(.7, .9, 2)).times(Mat4.translation(4,3,.8)).times(Mat4.translation(-5.2, 0, 0));
-            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.cards);
+            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.cJ);
         }
+
+        this.card_test_transform = Mat4.translation(0, 0, 2);
+        /*this.shapes.card_test.arrays.texture_coord.forEach(
+            (v, i, l) => l[i] = vec(v[0]*2, v[1]*2)
+        );*/
     }
 }
 
