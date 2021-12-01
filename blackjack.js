@@ -55,7 +55,87 @@ export class BlackJack extends Scene {
                 color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c12.png", "NEAREST"),}),
             cK: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c13.png", "NEAREST"),}),
-            
+
+            dA: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d01.png", "NEAREST"),}),
+            d2: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d02.png", "NEAREST"),}),
+            d3: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d03.png", "NEAREST"),}),
+            d4: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d04.png", "NEAREST"),}),
+            d5: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d05.png", "NEAREST"),}),
+            d6: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d06.png", "NEAREST"),}),
+            d7: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d07.png", "NEAREST"),}),
+            d8: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d08.png", "NEAREST"),}),
+            d9: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d09.png", "NEAREST"),}),
+            d10: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d10.png", "NEAREST"),}),
+            dJ: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d11.png", "NEAREST"),}),
+            dQ: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d12.png", "NEAREST"),}),
+            dK: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d13.png", "NEAREST"),}),
+
+            hA: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h01.png", "NEAREST"),}),
+            h2: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h02.png", "NEAREST"),}),
+            h3: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h03.png", "NEAREST"),}),
+            h4: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h04.png", "NEAREST"),}),
+            h5: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h05.png", "NEAREST"),}),
+            h6: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h06.png", "NEAREST"),}),
+            h7: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h07.png", "NEAREST"),}),
+            h8: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h08.png", "NEAREST"),}),
+            h9: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h09.png", "NEAREST"),}),
+            h10: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h10.png", "NEAREST"),}),
+            hJ: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h11.png", "NEAREST"),}),
+            hQ: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h12.png", "NEAREST"),}),
+            hK: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h13.png", "NEAREST"),}),
+                
+            sA: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s01.png", "NEAREST"),}),
+            s2: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s02.png", "NEAREST"),}),
+            s3: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s03.png", "NEAREST"),}),
+            s4: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s04.png", "NEAREST"),}),
+            s5: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s05.png", "NEAREST"),}),
+            s6: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s06.png", "NEAREST"),}),
+            s7: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s07.png", "NEAREST"),}),
+            s8: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s08.png", "NEAREST"),}),
+            s9: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s09.png", "NEAREST"),}),
+            s10: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s10.png", "NEAREST"),}),
+            sJ: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s11.png", "NEAREST"),}),
+            sQ: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s12.png", "NEAREST"),}),
+            sK: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s13.png", "NEAREST"),}),   
         }
 
         this.initial_camera_location = Mat4.look_at(vec3(0, 0, 20), vec3(0, 0, 0), vec3(0, 1, 0));
