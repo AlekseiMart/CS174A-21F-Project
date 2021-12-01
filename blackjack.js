@@ -50,9 +50,9 @@ export class BlackJack extends Scene {
             c10: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c10.png", "NEAREST"),}),
             cJ: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c11_2.png", "NEAREST"),}),
-            cQ: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c11.png", "NEAREST"),}),
+            cQ: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c12.png", "NEAREST"),}),
             cK: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c13.png", "NEAREST"),}),
             
