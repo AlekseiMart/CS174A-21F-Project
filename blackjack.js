@@ -8,6 +8,7 @@ const {Cube, Axis_Arrows, Textured_Phong} = defs
 
 export class BlackJack extends Scene {
     constructor() {
+        
         // constructor(): Scenes begin by populating initial values like the Shapes and Materials they'll need.
         super();
 
@@ -28,119 +29,45 @@ export class BlackJack extends Scene {
             card_deck: new Material(new defs.Phong_Shader(),
                 {ambient: 1, diffusivity: 1, color: hex_color("#ffffff")}),
             back: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/Back.jpg", "NEAREST"),}),
-            cA: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c01.png", "NEAREST"),}),
-            c2: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c02.png", "NEAREST"),}),
-            c3: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c03.png", "NEAREST"),}),
-            c4: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c04.png", "NEAREST"),}),
-            c5: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c05.png", "NEAREST"),}),
-            c6: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c06.png", "NEAREST"),}),
-            c7: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c07.png", "NEAREST"),}),
-            c8: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c08.png", "NEAREST"),}),
-            c9: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c09.png", "NEAREST"),}),
-            c10: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c10.png", "NEAREST"),}),
-            cJ: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c11.png", "NEAREST"),}),
-            cQ: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c12.png", "NEAREST"),}),
-            cK: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/c13.png", "NEAREST"),}),
-
-            dA: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d01.png", "NEAREST"),}),
-            d2: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d02.png", "NEAREST"),}),
-            d3: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d03.png", "NEAREST"),}),
-            d4: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d04.png", "NEAREST"),}),
-            d5: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d05.png", "NEAREST"),}),
-            d6: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d06.png", "NEAREST"),}),
-            d7: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d07.png", "NEAREST"),}),
-            d8: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d08.png", "NEAREST"),}),
-            d9: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d09.png", "NEAREST"),}),
-            d10: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d10.png", "NEAREST"),}),
-            dJ: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d11.png", "NEAREST"),}),
-            dQ: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d12.png", "NEAREST"),}),
-            dK: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/d13.png", "NEAREST"),}),
-
-            hA: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h01.png", "NEAREST"),}),
-            h2: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h02.png", "NEAREST"),}),
-            h3: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h03.png", "NEAREST"),}),
-            h4: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h04.png", "NEAREST"),}),
-            h5: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h05.png", "NEAREST"),}),
-            h6: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h06.png", "NEAREST"),}),
-            h7: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h07.png", "NEAREST"),}),
-            h8: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h08.png", "NEAREST"),}),
-            h9: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h09.png", "NEAREST"),}),
-            h10: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h10.png", "NEAREST"),}),
-            hJ: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h11.png", "NEAREST"),}),
-            hQ: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h12.png", "NEAREST"),}),
-            hK: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/h13.png", "NEAREST"),}),
-                
-            sA: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s01.png", "NEAREST"),}),
-            s2: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s02.png", "NEAREST"),}),
-            s3: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s03.png", "NEAREST"),}),
-            s4: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s04.png", "NEAREST"),}),
-            s5: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s05.png", "NEAREST"),}),
-            s6: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s06.png", "NEAREST"),}),
-            s7: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s07.png", "NEAREST"),}),
-            s8: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s08.png", "NEAREST"),}),
-            s9: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s09.png", "NEAREST"),}),
-            s10: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s10.png", "NEAREST"),}),
-            sJ: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s11.png", "NEAREST"),}),
-            sQ: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s12.png", "NEAREST"),}),
-            sK: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/s13.png", "NEAREST"),}),   
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/Back.jpg", "NEAREST"),}),   
         }
+        //card deck creation + card textures
+        var suit = ["s", "h", "d", "c"];
+        var vals = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
+        this.deck = new Array();
+        for(var i = 0; i < suit.length; ++i){
+            for(var j = 0; j < vals.length; ++j){
+                var worth = parseInt(vals[i]);
+                if (vals[j] == "J" || vals[j] == "Q" || vals[j] == "K")
+                    worth = 10;
+                if (vals[j] == "A")
+                    worth = 11;
+                let fName = "assets/cards/" + suit[i] + vals[j] + ".png"
+                var card = {suitVal: suit[i]+vals[j], Worth: worth, Texture: 
+                new Material(new Textured_Phong(),
+                {color: hex_color("#000000"), ambient: 1, texture: new Texture(fName, "NEAREST")})
+                };
+                this.deck.push(card);
+            }
+        }
+        for(var i = this.deck.length-1; i > 0; --i){
+            var j = Math.floor(Math.random() * (i + 1));
+            var k = this.deck[i];
+            this.deck[i] = this.deck[j];
+            this.deck[j] = k;
+        }
+
 
         this.initial_camera_location = Mat4.look_at(vec3(0, 0, 20), vec3(0, 0, 0), vec3(0, 1, 0));
         this.bal = 1000;
-        this.hitNum = 0;
+        this.dealt = -1;
+        this.c1;
+        this.c2;
+        this.c3;
+        this.c4;
+        this.c5;
+        this.c6;
+        this.c7;
     }
 
     make_control_panel() {
@@ -185,26 +112,39 @@ export class BlackJack extends Scene {
         this.shapes.card_deck.draw(context, program_state, model_transform, this.materials.card_deck);
         model_transform = model_transform.times(Mat4.translation(-4,-2,-1)).times(Mat4.scale(26/3, 4, 2/3));
         this.shapes.table.draw(context, program_state, model_transform, this.materials.table);
+
         if(this.deal && this.deal() !== null){
+            if(this.dealt == -1){           
+                this.c1 = this.deck.pop();
+                this.c2 = this.deck.pop();
+                this.c3 = this.deck.pop();
+                this.c4 = this.deck.pop();
+                this.dealt = 1;
+            }
             model_transform = Mat4.identity().times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(2,3,.8)).times(Mat4.translation(-2.8, -4.5, 0));
-            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.cK);
+            this.shapes.one_card.draw(context, program_state, model_transform, this.c1.Texture);
             
             model_transform = Mat4.identity().times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(2,2.5,.8)).times(Mat4.translation(-2.8, 0, 0));
-            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.c3);
+            this.shapes.one_card.draw(context, program_state, model_transform, this.c2.Texture);
 
             model_transform = Mat4.identity().times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4,3,.8)).times(Mat4.translation(-5.2, -4.5, 0));
-            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.cQ);
+            this.shapes.one_card.draw(context, program_state, model_transform, this.c3.Texture);
 
             model_transform = Mat4.identity().times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4,2.5,.8)).times(Mat4.translation(-5.2, 0, 0));
-            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.cJ);
+            this.shapes.one_card.draw(context, program_state, model_transform, this.c4.Texture);
         }
+
         if(this.hit1 && this.hit1() !== null){
             if(!this.deal){
                 this.hit1 = 0;
             }
             else{
+                if(this.dealt == 1){
+                    this.c5 = this.deck.pop();
+                    this.dealt = 2;
+                }
                 model_transform = Mat4.identity().times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.8,3,.81)).times(Mat4.translation(-5.2, -4.5, 0));
-                this.shapes.one_card.draw(context, program_state, model_transform, this.materials.cQ);
+                this.shapes.one_card.draw(context, program_state, model_transform, this.c5.Texture);
             }
         }
         if(this.hit2 && this.hit2() !== null){
@@ -212,8 +152,12 @@ export class BlackJack extends Scene {
                 this.hit2 = 0;
             }
             else{
+                if(this.dealt == 2){
+                    this.c6 = this.deck.pop();
+                    this.dealt = 3;
+                }
                 model_transform = Mat4.identity().times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(5.1,3,.82)).times(Mat4.translation(-5.2, -4.5, 0));
-                this.shapes.one_card.draw(context, program_state, model_transform, this.materials.cJ);
+                this.shapes.one_card.draw(context, program_state, model_transform, this.c6.Texture);
             }
         }
         if(this.hit3 && this.hit3() !== null){
@@ -221,8 +165,12 @@ export class BlackJack extends Scene {
                 this.hit3 = 0;
             }
             else{
+                if(this.dealt == 3){
+                    this.c7 = this.deck.pop();
+                    this.dealt = 4;
+                }
                 model_transform = Mat4.identity().times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(5.4,3,.83)).times(Mat4.translation(-5.2, -4.5, 0));
-                this.shapes.one_card.draw(context, program_state, model_transform, this.materials.c10);
+                this.shapes.one_card.draw(context, program_state, model_transform, this.c7.Texture);
             }
         }
         this.card_test_transform = Mat4.translation(0, 0, 2);
