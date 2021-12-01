@@ -139,15 +139,25 @@ export class BlackJack extends Scene {
         }
 
         this.initial_camera_location = Mat4.look_at(vec3(0, 0, 20), vec3(0, 0, 0), vec3(0, 1, 0));
+        this.bal = 1000;
+        this.hitNum = 0;
     }
 
     make_control_panel() {
         // Draw the scene's buttons, setup their actions and keyboard shortcuts, and monitor live measurements.
-        this.key_triggered_button("Bet 10", ["1"], () => this.attached = () => null);
-        this.key_triggered_button("Bet 50", ["2"], () => this.attached = () => null);
-        this.key_triggered_button("Bet 100", ["3"], () => this.attached = () => null);
+        this.key_triggered_button("Bet 1", ["1"], () => this.updateBal = () => 1);
+        this.key_triggered_button("Bet 10", ["2"], () => this.updateBal = () => 10);
+        this.key_triggered_button("Bet 50", ["3"], () => this.updateBal = () => 50);
+        this.key_triggered_button("Bet 100", ["4"], () => this.updateBal = () => 100);
         this.new_line();
         this.key_triggered_button("Deal Cards", ["0"], () => this.deal = () => 1);
+        this.new_line();
+        this.key_triggered_button("HitFirst", ["H"], () => this.hit1 = () => 1);
+        this.key_triggered_button("HitSecond", ["J"], () => this.hit2 = () => 1);
+        this.key_triggered_button("HitThird", ["K"], () => this.hit3 = () => 1);
+        this.new_line();
+        this.key_triggered_button("Stand", ["S"], () => this.stand = () => 1);
+        this.key_triggered_button("Double", ["D"], () => this.double = () => 1);
     }
 
     display(context, program_state) {
@@ -165,31 +175,56 @@ export class BlackJack extends Scene {
         const t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
         const yellow = hex_color("#fac91a");
         let model_transform = Mat4.identity();
-
         const light_position = vec4(0, 1, 0, 1);  
         // The parameters of the Light are: position, color, size
         program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 10)];
-        model_transform = model_transform.times(Mat4.scale(.5, .5, .5)).times(Mat4.translation(0,-8,0.1));
+        model_transform = model_transform.times(Mat4.scale(.5, .5, .5)).times(Mat4.translation(0,-9,0.1));
         this.shapes.player.draw(context, program_state, model_transform, this.materials.player);
-        model_transform = model_transform.times(Mat4.translation(0,8,-0.1)).times(Mat4.scale(2, 2, 1));
+        model_transform = model_transform.times(Mat4.translation(0,7,-0.1)).times(Mat4.scale(3, 3, 1.5));
         model_transform = model_transform.times(Mat4.scale(.7, .9, .9)).times(Mat4.translation(4,3,1));
         this.shapes.card_deck.draw(context, program_state, model_transform, this.materials.card_deck);
-        model_transform = model_transform.times(Mat4.translation(-4,-3,-1)).times(Mat4.scale(13, 6, 1));
+        model_transform = model_transform.times(Mat4.translation(-4,-2,-1)).times(Mat4.scale(26/3, 4, 2/3));
         this.shapes.table.draw(context, program_state, model_transform, this.materials.table);
         if(this.deal && this.deal() !== null){
-            model_transform = Mat4.identity().times(Mat4.scale(.7, .9, 2)).times(Mat4.translation(4,3,.8)).times(Mat4.translation(-2.8, -4.5, 0));
-            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.back);
+            model_transform = Mat4.identity().times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(2,3,.8)).times(Mat4.translation(-2.8, -4.5, 0));
+            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.cK);
             
-            model_transform = Mat4.identity().times(Mat4.scale(.7, .9, 2)).times(Mat4.translation(4,3,.8)).times(Mat4.translation(-2.8, 0, 0));
+            model_transform = Mat4.identity().times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(2,2.5,.8)).times(Mat4.translation(-2.8, 0, 0));
             this.shapes.one_card.draw(context, program_state, model_transform, this.materials.c3);
 
-            model_transform = Mat4.identity().times(Mat4.scale(.7, .9, 2)).times(Mat4.translation(4,3,.8)).times(Mat4.translation(-5.2, -4.5, 0));
+            model_transform = Mat4.identity().times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4,3,.8)).times(Mat4.translation(-5.2, -4.5, 0));
             this.shapes.one_card.draw(context, program_state, model_transform, this.materials.cQ);
 
-            model_transform = Mat4.identity().times(Mat4.scale(.7, .9, 2)).times(Mat4.translation(4,3,.8)).times(Mat4.translation(-5.2, 0, 0));
+            model_transform = Mat4.identity().times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4,2.5,.8)).times(Mat4.translation(-5.2, 0, 0));
             this.shapes.one_card.draw(context, program_state, model_transform, this.materials.cJ);
         }
-
+        if(this.hit1 && this.hit1() !== null){
+            if(!this.deal){
+                this.hit1 = 0;
+            }
+            else{
+                model_transform = Mat4.identity().times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.8,3,.81)).times(Mat4.translation(-5.2, -4.5, 0));
+                this.shapes.one_card.draw(context, program_state, model_transform, this.materials.cQ);
+            }
+        }
+        if(this.hit2 && this.hit2() !== null){
+            if(!this.deal || !this.hit1){
+                this.hit2 = 0;
+            }
+            else{
+                model_transform = Mat4.identity().times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(5.1,3,.82)).times(Mat4.translation(-5.2, -4.5, 0));
+                this.shapes.one_card.draw(context, program_state, model_transform, this.materials.cJ);
+            }
+        }
+        if(this.hit3 && this.hit3() !== null){
+            if(!this.deal || !this.hit2){
+                this.hit3 = 0;
+            }
+            else{
+                model_transform = Mat4.identity().times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(5.4,3,.83)).times(Mat4.translation(-5.2, -4.5, 0));
+                this.shapes.one_card.draw(context, program_state, model_transform, this.materials.c10);
+            }
+        }
         this.card_test_transform = Mat4.translation(0, 0, 2);
         /*this.shapes.card_test.arrays.texture_coord.forEach(
             (v, i, l) => l[i] = vec(v[0]*2, v[1]*2)
