@@ -131,9 +131,64 @@ export class BlackJack extends Scene {
         // this.materials.shadow.specularity = 1;
         // this.materials.shadow.smoothness = 20;
 
+        // simulating projection due to incident angle with light source
+        let x_pos = model_transform[0][3], y_pos = model_transform[1][3];
 
-        console.log(model_transform[2]);
-        console.log(model_shadow[2]);
+        let fov_y = Math.PI/2, 
+            aspect = context.width / (context.height*1.7), 
+            near = 0.1,
+            far = 1, 
+            d = far - near;
+        const f = 1 / Math.tan(fov_y / 2);
+            
+
+        // determining light quadrant
+        function four_quad_projection() {
+            // Quad 1
+            if (x_pos > 0 && y_pos > 0) {
+                near *= - Math.min(Math.abs(x_pos), 1) * Math.min(Math.abs(y_pos), 1);
+                far *= - Math.min(Math.abs(x_pos), 1) * Math.min(Math.abs(y_pos), 1);
+            }
+            // Quad 2
+            else if (x_pos < 0 && y_pos > 0) {
+                near *= - Math.min(Math.abs(x_pos), 1) * Math.min(Math.abs(y_pos), 1);
+            }
+            
+            // Quad 3
+            else if (x_pos < 0 && y_pos < 0) {
+                near *= - Math.min(Math.abs(x_pos), 1) * Math.min(Math.abs(y_pos), 1);
+                far *= - Math.min(Math.abs(x_pos), 1) * Math.min(Math.abs(y_pos), 1);
+            }
+            
+            // Quad 4
+            else if (x_pos > 0 && y_pos < 0) {
+                near *= - Math.min(Math.abs(x_pos), 1) * Math.min(Math.abs(y_pos), 1);
+            }
+        }
+        
+        let perpective_proj = Matrix.of(
+            [f / aspect, 0, -(near + far) / d, -2 * near * far / d],
+            [0, f, -(near + far) / d, -2 * near * far / d],
+            [0, 0, 1, 0],
+            [0, 0, -1, 1]);
+        
+        
+        // absolute value offset method
+        let factor = card_height * 3 * 10**-2, 
+            x_offset = x_pos * factor, 
+            y_offset = y_pos * factor;
+
+        let offset_proj = Matrix.of(
+            [1, 0, 0, x_offset],
+            [0, 1, 0, y_offset],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]);
+        
+        model_shadow = model_shadow.times(offset_proj);
+
+
+        console.log(model_transform[1]);
+        // console.log(model_shadow[2]);
         
 
         this.shapes.drop_shadow.draw(context, program_state, model_shadow, this.materials.shadow);
@@ -234,33 +289,42 @@ export class BlackJack extends Scene {
                     if((t-a) < 7){
                         model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(t-a-6)*1));
                         this.shapes.one_card.draw(context, program_state, model_transform, this.c3.Texture);
+                        this.make_shadow(context, program_state, model_transform);
                     }
                     else if((t-a) < 8){
                         model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-7)*-5,0, 0));
                         this.shapes.one_card.draw(context, program_state, model_transform, this.c3.Texture);
+                        this.make_shadow(context, program_state, model_transform);
                     }
                     else if((t-a) < 9){
                         model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.995-(t-a-8))*1)).times(Mat4.translation(-5,0, 0));
                         this.shapes.one_card.draw(context, program_state, model_transform, this.c3.Texture);
+                        this.make_shadow(context, program_state, model_transform);
                     }
                     else{
                         model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.005)).times(Mat4.translation(-5, 0, 0));
                         this.shapes.one_card.draw(context, program_state, model_transform, this.c3.Texture);
+                        this.make_shadow(context, program_state, model_transform);
+
                         if((t-a) < 10){
                             model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(t-a-9)*1));
                             this.shapes.one_card.draw(context, program_state, model_transform, this.materials.back);
+                            this.make_shadow(context, program_state, model_transform);
                         }
                         else if((t-a) < 11){
                             model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-10)*-4.7,0, 0));
                             this.shapes.one_card.draw(context, program_state, model_transform, this.materials.back);
+                            this.make_shadow(context, program_state, model_transform);
                         }
                         else if((t-a) < 12){
                             model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.99-(t-a-11))*1)).times(Mat4.translation(-4.7,0, 0));
                             this.shapes.one_card.draw(context, program_state, model_transform, this.materials.back);
+                            this.make_shadow(context, program_state, model_transform);
                         }
                         else if(!this.stand){
                             model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.01)).times(Mat4.translation(-4.7, 0, 0));
                             this.shapes.one_card.draw(context, program_state, model_transform, this.materials.back);
+                            this.make_shadow(context, program_state, model_transform);
                         }
                     }
                 }
