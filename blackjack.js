@@ -58,7 +58,7 @@ export class BlackJack extends Scene {
         }
 
 
-        this.initial_camera_location = Mat4.look_at(vec3(0, 0, 20), vec3(0, 0, 0), vec3(0, 1, 0));
+        this.initial_camera_location = Mat4.look_at(vec3(0, -20, 15), vec3(0, 0, 0), vec3(0, 1, 0));
         this.bal = 1000;
         this.dealt = -1;
         this.c1;
@@ -101,7 +101,7 @@ export class BlackJack extends Scene {
 
         const t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
         const yellow = hex_color("#fac91a");
-        let model_transform = Mat4.identity();
+        let model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7));
         const light_position = vec4(0, 1, 0, 1);  
         // The parameters of the Light are: position, color, size
         program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 10)];
@@ -121,16 +121,16 @@ export class BlackJack extends Scene {
                 this.c4 = this.deck.pop();
                 this.dealt = 1;
             }
-            model_transform = Mat4.identity().times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(2,3,.8)).times(Mat4.translation(-2.8, -4.5, 0));
+            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(2,3,.8)).times(Mat4.translation(-2.8, -4.5, 0));
             this.shapes.one_card.draw(context, program_state, model_transform, this.c1.Texture);
             
-            model_transform = Mat4.identity().times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(2,2.5,.8)).times(Mat4.translation(-2.8, 0, 0));
+            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(2,2.5,.8)).times(Mat4.translation(-2.8, 0, 0));
             this.shapes.one_card.draw(context, program_state, model_transform, this.c2.Texture);
 
-            model_transform = Mat4.identity().times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4,3,.8)).times(Mat4.translation(-5.2, -4.5, 0));
+            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4,3,.8)).times(Mat4.translation(-5.2, -4.5, 0));
             this.shapes.one_card.draw(context, program_state, model_transform, this.c3.Texture);
 
-            model_transform = Mat4.identity().times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4,2.5,.8)).times(Mat4.translation(-5.2, 0, 0));
+            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4,2.5,.8)).times(Mat4.translation(-5.2, 0, 0));
             this.shapes.one_card.draw(context, program_state, model_transform, this.c4.Texture);
         }
 
@@ -143,7 +143,7 @@ export class BlackJack extends Scene {
                     this.c5 = this.deck.pop();
                     this.dealt = 2;
                 }
-                model_transform = Mat4.identity().times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.8,3,.81)).times(Mat4.translation(-5.2, -4.5, 0));
+                model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.8,3,.81)).times(Mat4.translation(-5.2, -4.5, 0));
                 this.shapes.one_card.draw(context, program_state, model_transform, this.c5.Texture);
             }
         }
@@ -156,7 +156,7 @@ export class BlackJack extends Scene {
                     this.c6 = this.deck.pop();
                     this.dealt = 3;
                 }
-                model_transform = Mat4.identity().times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(5.1,3,.82)).times(Mat4.translation(-5.2, -4.5, 0));
+                model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(5.1,3,.82)).times(Mat4.translation(-5.2, -4.5, 0));
                 this.shapes.one_card.draw(context, program_state, model_transform, this.c6.Texture);
             }
         }
@@ -169,7 +169,7 @@ export class BlackJack extends Scene {
                     this.c7 = this.deck.pop();
                     this.dealt = 4;
                 }
-                model_transform = Mat4.identity().times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(5.4,3,.83)).times(Mat4.translation(-5.2, -4.5, 0));
+                model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(5.4,3,.83)).times(Mat4.translation(-5.2, -4.5, 0));
                 this.shapes.one_card.draw(context, program_state, model_transform, this.c7.Texture);
             }
         }
