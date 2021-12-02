@@ -44,7 +44,7 @@ export class BlackJack extends Scene {
                     worth = 11;
                 let fName = "assets/cards/" + suit[i] + vals[j] + ".png"
                 var card = {suitVal: suit[i]+vals[j], Worth: worth, Texture: 
-                new Material(new Textured_Phong(),
+                new Material(new Card_Texture(),
                 {color: hex_color("#000000"), ambient: 1, texture: new Texture(fName, "NEAREST")})
                 };
                 this.deck.push(card);
@@ -177,6 +177,37 @@ export class BlackJack extends Scene {
         /*this.shapes.card_test.arrays.texture_coord.forEach(
             (v, i, l) => l[i] = vec(v[0]*2, v[1]*2)
         );*/
+    }
+}
+
+class Card_Texture extends Textured_Phong {
+    fragment_glsl_code() {
+        return this.shared_glsl_code() + `
+            varying vec2 f_tex_coord;
+            uniform sampler2D texture;
+            uniform float animation_time;
+            
+            void main(){
+                // Sample the texture image in the correct place:
+                vec4 tex_color = texture2D( texture, f_tex_coord);
+                
+                float u = mod(f_tex_coord.x, 1.0);
+                float v = mod(f_tex_coord.y, 1.0);
+
+                if ((u >= 0.975) || (u <= 0.025)) {
+                        tex_color = vec4(0, 0, 0, 1.0);
+                }
+                if ((v >= .975) || (v <= 0.025)) {
+                    
+                        tex_color = vec4(0, 0, 0, 1.0);
+                }
+
+                if( tex_color.w < .01 ) discard;
+                                                                         // Compute an initial (ambient) color:
+                gl_FragColor = vec4( ( tex_color.xyz + shape_color.xyz ) * ambient, shape_color.w * tex_color.w ); 
+                                                                         // Compute the final color with contributions from lights:
+                gl_FragColor.xyz += phong_model_lights( normalize( N ), vertex_worldspace );
+        } `;
     }
 }
 
