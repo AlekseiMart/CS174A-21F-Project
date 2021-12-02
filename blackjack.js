@@ -18,6 +18,7 @@ export class BlackJack extends Scene {
             player: new defs.Regular_2D_Polygon(100,100),
             card_deck: new defs.Cube(),
             one_card: new defs.Square(),
+            drop_shadow: new defs.Square(),
             tableedge: new defs.Torus(100, 100),
         };
 
@@ -31,6 +32,14 @@ export class BlackJack extends Scene {
                 color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/card_deck.jpg", "NEAREST"),}),
             back: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/Back.jpg", "NEAREST"),}), 
+            // shadow: new Material(new Textured_Phong(), {
+            //     color: hex_color("#5D5C5D"), ambient: 0.2, texture: new Texture("assets/tabletop.jpg", "NEAREST"),}),
+            shadow: new Material(new defs.Phong_Shader(),
+                {ambient: 1, 
+                    diffusivity: 1, 
+                    color: color(0, 0, 0, 0.93),
+                    smoothness: 100,
+                }),
             tableedge: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/table_edge2.jpg", "NEAREST"),}), 
             
@@ -49,7 +58,7 @@ export class BlackJack extends Scene {
                 let fName = "assets/cards/" + suit[i] + vals[j] + ".png"
                 var card = {suitVal: suit[i]+vals[j], Worth: worth, Texture: 
                 new Material(new Card_Texture(),
-                {color: hex_color("#000000"), ambient: 1, texture: new Texture(fName, "NEAREST")})
+                {color: hex_color("#000000"), ambient: 1, texture: new Texture(fName, "NEAREST") })
                 };
                 this.deck.push(card);
             }
@@ -96,6 +105,41 @@ export class BlackJack extends Scene {
         this.key_triggered_button("Stand", ["S"], () => this.stand = () => 1);
         this.key_triggered_button("Double", ["D"], () => this.double = () => 1);
     }
+
+    make_shadow(context, program_state, model_transform) {
+        // let model_shadow = model_transform.times(Mat4.translation(0, 0, -0.5));
+        
+        // define level position on table surface
+        let model_shadow = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7));
+        model_shadow = model_shadow.times(Mat4.scale(.5, .5, .5)).times(Mat4.translation(0,-9,0.1));
+        model_shadow = model_shadow.times(Mat4.scale(.9, .9, .9));
+
+        // --> prevents layer inversion
+        let card_height = model_transform[2][3];
+        if (card_height < model_shadow[2][3]) return;
+        
+        // orthogonal projection
+        model_shadow[0] = model_transform[0];
+        model_shadow[1] = model_transform[1];
+
+        // shadow spread dependent on height of object from bed of table
+        let spread_factor = Math.max( Math.cbrt((card_height+1) * 0.8), 1);
+        model_shadow = model_shadow.times(Mat4.scale(spread_factor, spread_factor, 0));
+        
+        // simulating diffusion
+        this.materials.shadow.color[3] = Math.max(0.8, 1/spread_factor);
+        // this.materials.shadow.specularity = 1;
+        // this.materials.shadow.smoothness = 20;
+
+
+        console.log(model_transform[2]);
+        console.log(model_shadow[2]);
+        
+
+        this.shapes.drop_shadow.draw(context, program_state, model_shadow, this.materials.shadow);
+    }
+
+
 
     display(context, program_state) {
         // display():  Called once per frame of animation.
@@ -148,33 +192,45 @@ export class BlackJack extends Scene {
             if((t-a) < 1){
                 model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(t-a)*1));
                 this.shapes.one_card.draw(context, program_state, model_transform, this.c1.Texture);
+                this.make_shadow(context, program_state, model_transform);
+
             }
             else if((t-a) < 2){
                 model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-1)*-5,(t-a-1)*-4.5, 0));
                 this.shapes.one_card.draw(context, program_state, model_transform, this.c1.Texture);
+                this.make_shadow(context, program_state, model_transform);
+
             }
             else if((t-a) < 3){
                 model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.995-(t-a-2))*1)).times(Mat4.translation(-5,-4.5, 0));
                 this.shapes.one_card.draw(context, program_state, model_transform, this.c1.Texture);
+                this.make_shadow(context, program_state, model_transform);
             }
             else{
                 model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.005)).times(Mat4.translation(-5, -4.5, 0));
                 this.shapes.one_card.draw(context, program_state, model_transform, this.c1.Texture);
+                this.make_shadow(context, program_state, model_transform);
+
+
                 if((t-a) < 4){
                     model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(t-a-3)*1));
                     this.shapes.one_card.draw(context, program_state, model_transform, this.c2.Texture);
+                    this.make_shadow(context, program_state, model_transform);
                 }
                 else if((t-a) < 5){
                     model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-4)*-4.7,(t-a-4)*-4.5, 0));
                     this.shapes.one_card.draw(context, program_state, model_transform, this.c2.Texture);
+                    this.make_shadow(context, program_state, model_transform);
                 }
                 else if((t-a) < 6){
                     model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.99-(t-a-5))*1)).times(Mat4.translation(-4.7,-4.5, 0));
                     this.shapes.one_card.draw(context, program_state, model_transform, this.c2.Texture);
+                    this.make_shadow(context, program_state, model_transform);
                 }
                 else{
                     model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.01)).times(Mat4.translation(-4.7, -4.5, 0));
                     this.shapes.one_card.draw(context, program_state, model_transform, this.c2.Texture);
+                    this.make_shadow(context, program_state, model_transform);
                     if((t-a) < 7){
                         model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(t-a-6)*1));
                         this.shapes.one_card.draw(context, program_state, model_transform, this.c3.Texture);
