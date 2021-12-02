@@ -26,8 +26,8 @@ export class BlackJack extends Scene {
                 {ambient: 1, diffusivity: 1, color: hex_color("#0a6c03")}),
             player: new Material(new defs.Phong_Shader(),
                 {ambient: 1, diffusivity: 1, color: hex_color("#ffffff")}),
-            card_deck: new Material(new defs.Phong_Shader(),
-                {ambient: 1, diffusivity: 1, color: hex_color("#ffffff")}),
+            card_deck: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/card_deck.jpg", "NEAREST"),}),
             back: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/Back.jpg", "NEAREST"),}),   
         }
@@ -102,6 +102,8 @@ export class BlackJack extends Scene {
         const t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
         const yellow = hex_color("#fac91a");
         let model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7));
+        let card_deck_top_transform = model_transform;
+        let card_deck_transform = model_transform;
         const light_position = vec4(0, 1, 0, 1);  
         // The parameters of the Light are: position, color, size
         program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 10)];
@@ -109,7 +111,10 @@ export class BlackJack extends Scene {
         this.shapes.player.draw(context, program_state, model_transform, this.materials.player);
         model_transform = model_transform.times(Mat4.translation(0,7,-0.1)).times(Mat4.scale(3, 3, 1.5));
         model_transform = model_transform.times(Mat4.scale(.7, .9, .9)).times(Mat4.translation(4,3,1));
-        this.shapes.card_deck.draw(context, program_state, model_transform, this.materials.card_deck);
+        card_deck_transform = card_deck_transform.times(Mat4.rotation(Math.PI / 2, 0, 1, 0)).times(Mat4.scale(.675, 1.35, 1.05)).times(Mat4.translation(-1, 2.26, 4));
+        this.shapes.card_deck.draw(context, program_state, card_deck_transform, this.materials.card_deck);
+        card_deck_top_transform = model_transform.times(Mat4.translation(0, 0, 1.01));
+        this.shapes.one_card.draw(context, program_state, card_deck_top_transform, this.materials.back);
         model_transform = model_transform.times(Mat4.translation(-4,-2,-1)).times(Mat4.scale(26/3, 4, 2/3));
         this.shapes.table.draw(context, program_state, model_transform, this.materials.table);
 
@@ -181,6 +186,37 @@ export class BlackJack extends Scene {
 }
 
 class Card_Texture extends Textured_Phong {
+    fragment_glsl_code() {
+        return this.shared_glsl_code() + `
+            varying vec2 f_tex_coord;
+            uniform sampler2D texture;
+            uniform float animation_time;
+            
+            void main(){
+                // Sample the texture image in the correct place:
+                vec4 tex_color = texture2D( texture, f_tex_coord);
+                
+                float u = mod(f_tex_coord.x, 1.0);
+                float v = mod(f_tex_coord.y, 1.0);
+
+                if ((u >= 0.975) || (u <= 0.025)) {
+                        tex_color = vec4(0, 0, 0, 1.0);
+                }
+                if ((v >= .98) || (v <= 0.02)) {
+                    
+                        tex_color = vec4(0, 0, 0, 1.0);
+                }
+
+                if( tex_color.w < .01 ) discard;
+                                                                         // Compute an initial (ambient) color:
+                gl_FragColor = vec4( ( tex_color.xyz + shape_color.xyz ) * ambient, shape_color.w * tex_color.w ); 
+                                                                         // Compute the final color with contributions from lights:
+                gl_FragColor.xyz += phong_model_lights( normalize( N ), vertex_worldspace );
+        } `;
+    }
+}
+
+class Card__Deck_Texture extends Textured_Phong {
     fragment_glsl_code() {
         return this.shared_glsl_code() + `
             varying vec2 f_tex_coord;
