@@ -37,7 +37,7 @@ export class BlackJack extends Scene {
         this.deck = new Array();
         for(var i = 0; i < suit.length; ++i){
             for(var j = 0; j < vals.length; ++j){
-                var worth = parseInt(vals[i]);
+                var worth = j + 2;
                 if (vals[j] == "J" || vals[j] == "Q" || vals[j] == "K")
                     worth = 10;
                 if (vals[j] == "A")
@@ -61,6 +61,7 @@ export class BlackJack extends Scene {
         this.initial_camera_location = Mat4.look_at(vec3(0, -20, 15), vec3(0, 0, 0), vec3(0, 1, 0));
         this.bal = 1000;
         this.dealt = -1;
+        this.player_total = 0;
         this.c1;
         this.c2;
         this.c3;
@@ -124,6 +125,8 @@ export class BlackJack extends Scene {
                 this.c2 = this.deck.pop();
                 this.c3 = this.deck.pop();
                 this.c4 = this.deck.pop();
+                this.player_total += this.c1.Worth;
+                this.player_total += this.c2.Worth;
                 this.dealt = 1;
                 a=t;
             }
@@ -200,6 +203,7 @@ export class BlackJack extends Scene {
             else{
                 if(this.dealt == 1){
                     this.c5 = this.deck.pop();
+                    this.player_total += this.c5.Worth;
                     this.dealt = 2;
                     a = t-12;
                 }
@@ -228,6 +232,7 @@ export class BlackJack extends Scene {
             else{
                 if(this.dealt == 2){
                     this.c6 = this.deck.pop();
+                    this.player_total += this.c6.Worth;
                     this.dealt = 3;
                     a = t-15;
                 }
@@ -256,6 +261,7 @@ export class BlackJack extends Scene {
             else{
                 if(this.dealt == 3){
                     this.c7 = this.deck.pop();
+                    this.player_total += this.c7.Worth;
                     this.dealt = 4;
                     a = t-18;
                 }
@@ -277,6 +283,15 @@ export class BlackJack extends Scene {
                 }
             }
         }
+        
+        //player_total 
+        if(this.player_total > 21){
+            console.log("You lose.");
+        }
+        if(this.player_total == 21 && this.dealt == 1){
+            console.log("BLACK JACK!! You won!")
+        }
+
         this.card_test_transform = Mat4.translation(0, 0, 2);
         /*this.shapes.card_test.arrays.texture_coord.forEach(
             (v, i, l) => l[i] = vec(v[0]*2, v[1]*2)
