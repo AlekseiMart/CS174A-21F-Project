@@ -529,7 +529,7 @@ class Card_Texture extends Textured_Phong {
                 if ((u >= 0.975) || (u <= 0.025)) {
                         tex_color = vec4(0, 0, 0, 1.0);
                 }
-                if ((v >= .98) || (v <= 0.02)) {
+                if ((v >= .982) || (v <= 0.018)) {
                     
                         tex_color = vec4(0, 0, 0, 1.0);
                 }
