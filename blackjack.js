@@ -5,7 +5,7 @@ const {
 } = tiny;
 
 const {Cube, Axis_Arrows, Textured_Phong} = defs
-
+let a = 0;
 export class BlackJack extends Scene {
     constructor() {
         
@@ -108,7 +108,7 @@ export class BlackJack extends Scene {
         // The parameters of the Light are: position, color, size
         program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 10)];
         model_transform = model_transform.times(Mat4.scale(.5, .5, .5)).times(Mat4.translation(0,-9,0.1));
-        this.shapes.player.draw(context, program_state, model_transform, this.materials.player);
+        //this.shapes.player.draw(context, program_state, model_transform, this.materials.player);
         model_transform = model_transform.times(Mat4.translation(0,7,-0.1)).times(Mat4.scale(3, 3, 1.5));
         model_transform = model_transform.times(Mat4.scale(.7, .9, .9)).times(Mat4.translation(4,3,1));
         card_deck_transform = card_deck_transform.times(Mat4.rotation(Math.PI / 2, 0, 1, 0)).times(Mat4.scale(.675, 1.35, 1.05)).times(Mat4.translation(-1, 2.26, 4));
@@ -125,18 +125,72 @@ export class BlackJack extends Scene {
                 this.c3 = this.deck.pop();
                 this.c4 = this.deck.pop();
                 this.dealt = 1;
+                a=t;
             }
-            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(2,3,.8)).times(Mat4.translation(-2.8, -4.5, 0));
-            this.shapes.one_card.draw(context, program_state, model_transform, this.c1.Texture);
-            
-            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(2,2.5,.8)).times(Mat4.translation(-2.8, 0, 0));
-            this.shapes.one_card.draw(context, program_state, model_transform, this.c2.Texture);
-
-            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4,3,.8)).times(Mat4.translation(-5.2, -4.5, 0));
-            this.shapes.one_card.draw(context, program_state, model_transform, this.c3.Texture);
-
-            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4,2.5,.8)).times(Mat4.translation(-5.2, 0, 0));
-            this.shapes.one_card.draw(context, program_state, model_transform, this.c4.Texture);
+            if((t-a) < 1){
+                model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(t-a)*1));
+                this.shapes.one_card.draw(context, program_state, model_transform, this.c1.Texture);
+            }
+            else if((t-a) < 2){
+                model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-1)*-5,(t-a-1)*-4.5, 0));
+                this.shapes.one_card.draw(context, program_state, model_transform, this.c1.Texture);
+            }
+            else if((t-a) < 3){
+                model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.99-(t-a-2))*1)).times(Mat4.translation(-5,-4.5, 0));
+                this.shapes.one_card.draw(context, program_state, model_transform, this.c1.Texture);
+            }
+            else{
+                model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.01)).times(Mat4.translation(-5, -4.5, 0));
+                this.shapes.one_card.draw(context, program_state, model_transform, this.c1.Texture);
+                if((t-a) < 4){
+                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(t-a-3)*1));
+                    this.shapes.one_card.draw(context, program_state, model_transform, this.c2.Texture);
+                }
+                else if((t-a) < 5){
+                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-4)*-4.7,(t-a-4)*-4.5, 0));
+                    this.shapes.one_card.draw(context, program_state, model_transform, this.c2.Texture);
+                }
+                else if((t-a) < 6){
+                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.98-(t-a-5))*1)).times(Mat4.translation(-4.7,-4.5, 0));
+                    this.shapes.one_card.draw(context, program_state, model_transform, this.c2.Texture);
+                }
+                else{
+                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.02)).times(Mat4.translation(-4.7, -4.5, 0));
+                    this.shapes.one_card.draw(context, program_state, model_transform, this.c2.Texture);
+                    if((t-a) < 7){
+                        model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(t-a-6)*1));
+                        this.shapes.one_card.draw(context, program_state, model_transform, this.c3.Texture);
+                    }
+                    else if((t-a) < 8){
+                        model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-7)*-5,0, 0));
+                        this.shapes.one_card.draw(context, program_state, model_transform, this.c3.Texture);
+                    }
+                    else if((t-a) < 9){
+                        model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.99-(t-a-8))*1)).times(Mat4.translation(-5,0, 0));
+                        this.shapes.one_card.draw(context, program_state, model_transform, this.c3.Texture);
+                    }
+                    else{
+                        model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.01)).times(Mat4.translation(-5, 0, 0));
+                        this.shapes.one_card.draw(context, program_state, model_transform, this.c3.Texture);
+                        if((t-a) < 10){
+                            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(t-a-9)*1));
+                            this.shapes.one_card.draw(context, program_state, model_transform, this.c4.Texture);
+                        }
+                        else if((t-a) < 11){
+                            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-10)*-4.7,0, 0));
+                            this.shapes.one_card.draw(context, program_state, model_transform, this.c4.Texture);
+                        }
+                        else if((t-a) < 12){
+                            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.98-(t-a-11))*1)).times(Mat4.translation(-4.7,0, 0));
+                            this.shapes.one_card.draw(context, program_state, model_transform, this.c4.Texture);
+                        }
+                        else{
+                            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.02)).times(Mat4.translation(-4.7, 0, 0));
+                            this.shapes.one_card.draw(context, program_state, model_transform, this.c4.Texture);
+                        }
+                    }
+                }
+            }
         }
 
         if(this.hit1 && this.hit1() !== null){
