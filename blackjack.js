@@ -23,8 +23,8 @@ export class BlackJack extends Scene {
 
         // *** Materials
         this.materials = {
-            table: new Material(new defs.Phong_Shader(),
-                {ambient: 1, diffusivity: 1, color: hex_color("#0a6c03")}),
+            table: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/tabletop.jpg", "NEAREST"),}), 
             player: new Material(new defs.Phong_Shader(),
                 {ambient: 1, diffusivity: 1, color: hex_color("#ffffff")}),
             card_deck: new Material(new Textured_Phong(), {
