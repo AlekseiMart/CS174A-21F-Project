@@ -24,8 +24,6 @@ export class BlackJack extends Scene {
 
         // *** Materials
         this.materials = {
-            table: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/tabletop.jpg", "NEAREST"),}), 
             player: new Material(new defs.Phong_Shader(),
                 {ambient: 1, diffusivity: 1, color: hex_color("#ffffff")}),
             card_deck: new Material(new Textured_Phong(), {
@@ -40,7 +38,13 @@ export class BlackJack extends Scene {
                     color: color(0, 0, 0, 0.93),
                     smoothness: 100,
                 }),
-            tableedge: new Material(new Textured_Phong(), {
+            green_table: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/green.jpg", "NEAREST"),}), 
+            blue_table: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/blue.jpg", "NEAREST"),}), 
+            green_tableedge: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/table_edge.jpg", "NEAREST"),}), 
+            blue_tableedge: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/table_edge2.jpg", "NEAREST"),}), 
             
         }
@@ -77,6 +81,7 @@ export class BlackJack extends Scene {
         this.dealer_dealt = -1;
         this.player_total = 0;
         this.dealer_total = 0;
+        this.table_texture = 0;
         this.c1;
         this.c2;
         this.c3;
@@ -104,6 +109,13 @@ export class BlackJack extends Scene {
         this.new_line();
         this.key_triggered_button("Stand", ["S"], () => this.stand = () => 1);
         this.key_triggered_button("Double", ["D"], () => this.double = () => 1);
+        this.new_line();
+        this.key_triggered_button("Green Table", ["G"], () => {
+            this.table_texture = 0;
+        });
+        this.key_triggered_button("Blue Table", ["B"], () => {
+            this.table_texture = 1;
+        });
     }
 
     make_shadow(context, program_state, model_transform) {
@@ -227,9 +239,17 @@ export class BlackJack extends Scene {
         card_deck_top_transform = model_transform.times(Mat4.translation(0, 0, 1.01));
         this.shapes.one_card.draw(context, program_state, card_deck_top_transform, this.materials.back);
         model_transform = model_transform.times(Mat4.translation(-4,-2,-1)).times(Mat4.scale(26/3, 4, 2/3));
-        this.shapes.table.draw(context, program_state, model_transform, this.materials.table);
-        model_transform = model_transform.times(Mat4.scale(1.71, 1.71, 8));
-        this.shapes.tableedge.draw(context, program_state, model_transform, this.materials.tableedge);
+        if (this.table_texture == 0) {
+            this.shapes.table.draw(context, program_state, model_transform, this.materials.green_table);
+            model_transform = model_transform.times(Mat4.scale(1.71, 1.71, 8));
+            this.shapes.tableedge.draw(context, program_state, model_transform, this.materials.green_tableedge);
+        } else if (this.table_texture == 1) {
+            this.shapes.table.draw(context, program_state, model_transform, this.materials.blue_table);
+            model_transform = model_transform.times(Mat4.scale(1.71, 1.71, 8));
+            this.shapes.tableedge.draw(context, program_state, model_transform, this.materials.blue_tableedge);
+        } else {
+
+        }
 
         if(this.deal && this.deal() !== null){
             if(this.dealt == -1){           
