@@ -39,13 +39,17 @@ export class BlackJack extends Scene {
                     smoothness: 100,
                 }),
             green_table: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/green.jpg", "NEAREST"),}), 
+                color: hex_color("#000000"), ambient: .8, specularity: .2, texture: new Texture("assets/green2.jpg", "NEAREST"),}), 
             blue_table: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/blue.jpg", "NEAREST"),}), 
+                color: hex_color("#000000"), ambient: .8, specularity: .2, texture: new Texture("assets/blue.jpg", "NEAREST"),}), 
+            red_table: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: .8, specularity: .2, texture: new Texture("assets/red.jpg", "NEAREST"),}), 
             green_tableedge: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/table_edge.jpg", "NEAREST"),}), 
             blue_tableedge: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/table_edge2.jpg", "NEAREST"),}), 
+                color: hex_color("#000000"), ambient: 1, specularity: 1, texture: new Texture("assets/table_edge2.jpg", "NEAREST"),}), 
+            red_tableedge: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: .8, specularity: 1, texture: new Texture("assets/table_edge3.jpg", "NEAREST"),}), 
             
         }
         //card deck creation + card textures
@@ -115,6 +119,9 @@ export class BlackJack extends Scene {
         });
         this.key_triggered_button("Blue Table", ["B"], () => {
             this.table_texture = 1;
+        });
+        this.key_triggered_button("Red Table", ["R"], () => {
+            this.table_texture = 2;
         });
     }
 
@@ -248,7 +255,9 @@ export class BlackJack extends Scene {
             model_transform = model_transform.times(Mat4.scale(1.71, 1.71, 8));
             this.shapes.tableedge.draw(context, program_state, model_transform, this.materials.blue_tableedge);
         } else {
-
+            this.shapes.table.draw(context, program_state, model_transform, this.materials.red_table);
+            model_transform = model_transform.times(Mat4.scale(1.71, 1.71, 8));
+            this.shapes.tableedge.draw(context, program_state, model_transform, this.materials.red_tableedge);
         }
 
         if(this.deal && this.deal() !== null){
