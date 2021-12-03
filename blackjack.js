@@ -133,6 +133,8 @@ export class BlackJack extends Scene {
         this.key_triggered_button("Red Table", ["R"], () => {
             this.table_texture = 2;
         });
+        this.new_line();
+        this.key_triggered_button("Reset", ["R"], () => this.reset = () => 1);
     }
 
     make_shadow(context, program_state, model_transform) {
@@ -502,6 +504,22 @@ export class BlackJack extends Scene {
                 this.dealer_total += this.c4.Worth;
                 this.dealer_dealt = -1;
             }
+            //Win checks
+            if(this.dealer_total > 16){
+              
+                if(this.dealer_total > 21){
+                    console.log("You win!");
+                }
+                else if(this.player_total < this.dealer_total){
+                    console.log("You lose.");
+                }
+                else if(this.dealer_total == this.player_total){
+                    console.log("Push");
+                }
+                else{
+                    console.log("You win.");
+                }
+            }
             model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.01)).times(Mat4.translation(-4.7, 0, 0));
             this.shapes.one_card.draw(context, program_state, model_transform, this.c4.Texture);
             //console.log(this.dealer_total);
@@ -578,15 +596,25 @@ export class BlackJack extends Scene {
                 }
             }
         }
-
-        //player_total 
-        if(this.player_total > 21){
+        if(this.player_total == 21 && this.dealt == 1){
+            console.log("BLACK JACK!! You won!");
+        }
+        else if(this.player_total > 21){
             console.log("You lose.");
         }
-        if(this.player_total == 21 && this.dealt == 1){
-            console.log("BLACK JACK!! You won!")
+        if(this.reset && this.reset() !== null){
+            this.dealt = -1;
+            this.dealer_dealt = -2;
+            this.player_total = 0;
+            this.dealer_total = 0;
+            this.deal = 0;
+            this.hit1 = 0;
+            this.hit2 = 0;
+            this.hit3 = 0;
+            this.stand = 0;
+            this.double = 0;
+            this.reset = 0;
         }
-
         this.card_test_transform = Mat4.translation(0, 0, 2);
         /*this.shapes.card_test.arrays.texture_coord.forEach(
             (v, i, l) => l[i] = vec(v[0]*2, v[1]*2)
