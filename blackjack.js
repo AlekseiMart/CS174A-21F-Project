@@ -391,19 +391,17 @@ export class BlackJack extends Scene {
             this.shapes.one_card.draw(context, program_state, text_transform.times(Mat4.translation(0.75,.1,-0.05)).times(Mat4.scale(1.5, 1.1, 1)), this.materials.text_background);
             this.shapes.text.set_string(dealer_text, context.context);
             this.shapes.text.draw(context, program_state, text_transform, this.materials.text);
-
-            // display current balance
-            text_transform = Mat4.identity().times(Mat4.translation(3.5, -6, .1)).times(Mat4.scale(.5, .5, 1));
-            this.shapes.long_text.set_string("Bal: " + this.balance.toString(), context.context);
-            this.shapes.long_text.draw(context, program_state, text_transform, this.materials.text);
-            
-            // display current bet
-            text_transform = Mat4.identity().times(Mat4.translation(3.5, -4, .1)).times(Mat4.scale(.5, .5, 1));
-            this.shapes.long_text.set_string("Bet: " + this.bet.toString(), context.context);
-            this.shapes.long_text.draw(context, program_state, text_transform, this.materials.text);
-
-
         }
+
+        // display current balance
+        let text1_transform = Mat4.identity().times(Mat4.translation(3.5, -6, .1)).times(Mat4.scale(.5, .5, 1));
+        this.shapes.long_text.set_string("Bal: " + this.balance.toString(), context.context);
+        this.shapes.long_text.draw(context, program_state, text1_transform, this.materials.text);
+
+        // display current bet
+        text1_transform = Mat4.identity().times(Mat4.translation(3.5, -4, .1)).times(Mat4.scale(.5, .5, 1));
+        this.shapes.long_text.set_string("Bet: " + this.bet.toString(), context.context);
+        this.shapes.long_text.draw(context, program_state, text1_transform, this.materials.text);
 
         if (this.card_texture == 0) {
             this.c1 = this.classic_c1;
