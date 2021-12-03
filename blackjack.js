@@ -19,6 +19,7 @@ export class BlackJack extends Scene {
             card_deck: new defs.Cube(),
             one_card: new defs.Square(),
             drop_shadow: new defs.Square(),
+            drop_shadow_blur: new defs.Square(),
             tableedge: new defs.Torus(100, 100),
         };
 
@@ -38,6 +39,8 @@ export class BlackJack extends Scene {
                     color: color(0, 0, 0, 0.93),
                     smoothness: 100,
                 }),
+            auxiliary_blur: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/custom_blur.png", "NEAREST"),}), 
             green_table: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/green.jpg", "NEAREST"),}), 
             blue_table: new Material(new Textured_Phong(), {
@@ -139,7 +142,8 @@ export class BlackJack extends Scene {
         model_shadow = model_shadow.times(Mat4.scale(spread_factor, spread_factor, 0));
         
         // simulating diffusion
-        this.materials.shadow.color[3] = Math.max(0.8, 1/spread_factor);
+        let center_opacity = Math.max(0.8, 1/spread_factor);
+        this.materials.shadow.color[3] = center_opacity;
         // this.materials.shadow.specularity = 1;
         // this.materials.shadow.smoothness = 20;
 
@@ -198,12 +202,35 @@ export class BlackJack extends Scene {
         
         model_shadow = model_shadow.times(offset_proj);
 
-
-        console.log(model_transform[1]);
+        // console.log(model_transform[1]);
         // console.log(model_shadow[2]);
         
-
         this.shapes.drop_shadow.draw(context, program_state, model_shadow, this.materials.shadow);
+
+        // this.materials.shadow.color[3] = center_opacity * 0.9
+        // this.shapes.drop_shadow.draw(context, program_state, diffusion_matrix, this.materials.shadow);
+        
+        // generate diffusion effect
+        let num_rings = 500;
+        this.materials.shadow.color[0] = 0;
+        this.materials.shadow.color[1] = 0;
+        this.materials.shadow.color[2] = 0;
+        for (let i = 1; i < num_rings; i+=2) {
+            // apply diffusion borders
+            let diffusion_factor = 1 + (spread_factor-1) * i * 10**-2;
+            let diffusion_matrix = model_shadow.times(
+                Mat4.scale(diffusion_factor, diffusion_factor, diffusion_factor));
+            diffusion_matrix[2][3] -= 0.05*i/num_rings;
+
+            // reduce intensity in diffused shadow
+            this.materials.shadow.color[3] = center_opacity * Math.max(0, Math.cos( (1-1/(i)) * Math.PI/2));
+
+            this.shapes.drop_shadow.draw(context, program_state, diffusion_matrix, this.materials.shadow);
+        }
+
+
+
+
     }
 
 
@@ -226,9 +253,10 @@ export class BlackJack extends Scene {
         let card_deck_top_transform = model_transform;
         let card_deck_transform = model_transform;
 
-        const light_position = vec4(0, 1, 0, 1);  
+        const light_position = vec4(0, 10, 10, 1);  
         // The parameters of the Light are: position, color, size
-        program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 10)];
+        program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 50)];
+        // program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 10 ** (t % 100))];
 
         model_transform = model_transform.times(Mat4.scale(.5, .5, .5)).times(Mat4.translation(0,-9,0.1));
         //this.shapes.player.draw(context, program_state, model_transform, this.materials.player);
