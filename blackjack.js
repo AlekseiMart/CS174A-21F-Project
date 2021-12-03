@@ -92,7 +92,7 @@ export class BlackJack extends Scene {
         this.initial_camera_location = Mat4.look_at(vec3(0, -20, 15), vec3(0, 0, 0), vec3(0, 1, 0));
         this.bal = 1000;
         this.dealt = -1;
-        this.dealer_dealt = -1;
+        this.dealer_dealt = -2;
         this.player_total = 0;
         this.dealer_total = 0;
         this.table_texture = 0;
@@ -319,7 +319,6 @@ export class BlackJack extends Scene {
                 this.player_total += this.c1.Worth;
                 this.player_total += this.c2.Worth;
                 this.dealer_total += this.c3.Worth;
-                this.dealer_total += this.c4.Worth;
                 this.dealt = 1;
                 a=t;
             }
@@ -499,6 +498,10 @@ export class BlackJack extends Scene {
         }
 
         if(this.stand && this.stand() !== null){
+            if(this.dealer_dealt == -2){
+                this.dealer_total += this.c4.Worth;
+                this.dealer_dealt = -1;
+            }
             model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.01)).times(Mat4.translation(-4.7, 0, 0));
             this.shapes.one_card.draw(context, program_state, model_transform, this.c4.Texture);
             //console.log(this.dealer_total);
