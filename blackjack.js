@@ -23,6 +23,7 @@ export class BlackJack extends Scene {
             drop_shadow_blur: new defs.Square(),
             tableedge: new defs.Torus(100, 100),
             text: new Text_Line(2),
+            long_text: new Text_Line(10),
         };
 
         // *** Materials
@@ -108,8 +109,9 @@ export class BlackJack extends Scene {
         }
 
 
-        this.initial_camera_location = Mat4.look_at(vec3(0, -20, 15), vec3(0, 0, 0), vec3(0, 1, 0));
-        this.bal = 1000;
+        this.initial_camera_location = Mat4.look_at(vec3(0, -17, 19), vec3(0, 3, -3), vec3(0, 1, 0));
+        this.balance = 1000;
+        this.bet = 0;
         this.dealt = -1;
         this.dealer_dealt = -2;
         this.player_total = 0;
@@ -130,11 +132,20 @@ export class BlackJack extends Scene {
 
     make_control_panel() {
         // Draw the scene's buttons, setup their actions and keyboard shortcuts, and monitor live measurements.
-        this.key_triggered_button("Bet 1", ["1"], () => this.updateBal = () => 1);
-        this.key_triggered_button("Bet 10", ["2"], () => this.updateBal = () => 10);
-        this.key_triggered_button("Bet 50", ["3"], () => this.updateBal = () => 50);
-        this.key_triggered_button("Bet 100", ["4"], () => this.updateBal = () => 100);
+        
+        // triggers for bets
+        let possible_bets = [1, 10, 50, 100];       // modify to add any number of bets
+        for (let i = 0; i < possible_bets.length; i++) {
+            let cur_bet = possible_bets[i];
+            this.key_triggered_button("Bet " + cur_bet, [i+1], () => {
+                if (cur_bet > this.balance) return;
+                this.balance -= cur_bet;
+                this.bet += cur_bet;
+            });
+        }
+    
         this.new_line();
+
         this.key_triggered_button("Deal Cards", ["0"], () => this.deal = () => 1);
         this.new_line();
         this.key_triggered_button("HitFirst", ["H"], () => this.hit1 = () => 1);
@@ -261,7 +272,7 @@ export class BlackJack extends Scene {
         this.materials.shadow.color[0] = 0;
         this.materials.shadow.color[1] = 0;
         this.materials.shadow.color[2] = 0;
-        for (let i = 1; i < num_rings; i+=2) {
+        for (let i = num_rings/20; i < num_rings; i+=2) {
             // apply diffusion borders
             let diffusion_factor = 1 + (spread_factor-1) * i * 10**-2;
             let diffusion_matrix = model_shadow.times(
@@ -270,7 +281,6 @@ export class BlackJack extends Scene {
 
             // reduce intensity in diffused shadow
             this.materials.shadow.color[3] = center_opacity * Math.max(0, Math.cos( (1-1/(i)) * Math.PI/2));
-
             this.shapes.drop_shadow.draw(context, program_state, diffusion_matrix, this.materials.shadow);
         }
 
@@ -302,7 +312,7 @@ export class BlackJack extends Scene {
         const light_position = vec4(0, 10, 10, 1);  
         // The parameters of the Light are: position, color, size
         program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 10)];
-        let background_transform = Mat4.identity().times(Mat4.rotation(Math.PI / 3.5, 1, 0, 0)).times(Mat4.scale(27, 15, 1)).times(Mat4.translation(0, 0, -10));
+        let background_transform = Mat4.identity().times(Mat4.rotation(Math.PI / 3.5, 1, 0, 0)).times(Mat4.scale(30, 20, 1)).times(Mat4.translation(0, 0, -10));
         this.shapes.one_card.draw(context, program_state, background_transform, this.materials.background);
 
         model_transform = model_transform.times(Mat4.scale(.5, .5, .5)).times(Mat4.translation(0,-9,0.1));
@@ -339,6 +349,18 @@ export class BlackJack extends Scene {
             this.shapes.one_card.draw(context, program_state, text_transform.times(Mat4.translation(0.72,.1,-0.05)).times(Mat4.scale(1.5, 1.1, 1)), this.materials.text_background);
             this.shapes.text.set_string(dealer_text, context.context);
             this.shapes.text.draw(context, program_state, text_transform, this.materials.text);
+
+            // display current balance
+            text_transform = Mat4.identity().times(Mat4.translation(3.5, -6, .1)).times(Mat4.scale(.5, .5, 1));
+            this.shapes.long_text.set_string("Bal: " + this.balance.toString(), context.context);
+            this.shapes.long_text.draw(context, program_state, text_transform, this.materials.text);
+            
+            // display current bet
+            text_transform = Mat4.identity().times(Mat4.translation(3.5, -4, .1)).times(Mat4.scale(.5, .5, 1));
+            this.shapes.long_text.set_string("Bet: " + this.bet.toString(), context.context);
+            this.shapes.long_text.draw(context, program_state, text_transform, this.materials.text);
+
+
         }
 
         if (this.card_texture == 0) {
