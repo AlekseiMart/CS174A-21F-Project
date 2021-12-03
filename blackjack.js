@@ -1,4 +1,5 @@
 import {defs, tiny} from './examples/common.js';
+import {Text_Line} from './examples/text-demo.js';
 
 const {
     Vector, Vector3, vec, vec3, vec4, color, hex_color, Shader, Matrix, Mat4, Light, Shape, Material, Scene, Texture,
@@ -21,6 +22,7 @@ export class BlackJack extends Scene {
             drop_shadow: new defs.Square(),
             drop_shadow_blur: new defs.Square(),
             tableedge: new defs.Torus(100, 100),
+            text: new Text_Line(2),
         };
 
         // *** Materials
@@ -55,6 +57,10 @@ export class BlackJack extends Scene {
                 color: hex_color("#000000"), ambient: .8, specularity: 1, texture: new Texture("assets/table_edge3.jpg", "NEAREST"),}), 
             background: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"), ambient: .8, specularity: 1, texture: new Texture("assets/background.jpg", "NEAREST"),}), 
+            text: new Material(new Textured_Phong(), {
+                ambient: 1, diffusivity: 0, specularity: 0, texture: new Texture("assets/text.png")}),
+            text_background: new Material(new defs.Phong_Shader(),
+                {ambient: 1, diffusivity: 1, color: hex_color("242424")}),
         }
         //card deck creation + card textures
         var suit = ["s", "h", "d", "c"];
@@ -289,6 +295,20 @@ export class BlackJack extends Scene {
             model_transform = model_transform.times(Mat4.scale(1.71, 1.71, 8));
             this.shapes.tableedge.draw(context, program_state, model_transform, this.materials.red_tableedge);
         }
+        
+        if (this.dealt == 1) {
+            let player_text = this.player_total.toString();
+            let dealer_text = this.dealer_total.toString();
+            let text_transform = Mat4.identity().times(Mat4.translation(-6, -3, .1)).times(Mat4.scale(.8, .8, 1));
+            this.shapes.one_card.draw(context, program_state, text_transform.times(Mat4.translation(0.72,.1,-0.05)).times(Mat4.scale(1.5, 1.1, 1)), this.materials.text_background);
+            this.shapes.text.set_string(player_text, context.context);
+            this.shapes.text.draw(context, program_state, text_transform, this.materials.text);
+            text_transform = text_transform.times(Mat4.translation(0, 7, 0));
+            this.shapes.one_card.draw(context, program_state, text_transform.times(Mat4.translation(0.72,.1,-0.05)).times(Mat4.scale(1.5, 1.1, 1)), this.materials.text_background);
+            this.shapes.text.set_string(dealer_text, context.context);
+            this.shapes.text.draw(context, program_state, text_transform, this.materials.text);
+        }
+
 
         if(this.deal && this.deal() !== null){
             if(this.dealt == -1){           
