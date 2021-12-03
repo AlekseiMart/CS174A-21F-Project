@@ -161,9 +161,11 @@ export class BlackJack extends Scene {
         for (let i = 0; i < possible_bets.length; i++) {
             let cur_bet = possible_bets[i];
             this.key_triggered_button("Bet " + cur_bet, [i+1], () => {
-                if (cur_bet > this.balance) return;
-                this.balance -= cur_bet;
-                this.bet += cur_bet;
+                if(this.dealt == -1){
+                    if (cur_bet > this.balance) return;
+                    this.balance -= cur_bet;
+                    this.bet += cur_bet;
+                }
             });
         }
     
@@ -842,6 +844,7 @@ export class BlackJack extends Scene {
             this.hit3 = 0;
             this.stand = 0;
             this.double = 0;
+            this.bet = 0;
             this.reset = 0;
         }
         this.card_test_transform = Mat4.translation(0, 0, 2);
