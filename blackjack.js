@@ -81,11 +81,30 @@ export class BlackJack extends Scene {
                 this.deck.push(card);
             }
         }
+        this.modern_deck = new Array();
+        for(var i = 0; i < suit.length; ++i){
+            for(var j = 0; j < vals.length; ++j){
+                var worth = j + 2;
+                if (vals[j] == "J" || vals[j] == "Q" || vals[j] == "K")
+                    worth = 10;
+                if (vals[j] == "A")
+                    worth = 11;
+                let fName = "assets/Modern/" + suit[i] + vals[j] + ".png"
+                var card = {suitVal: suit[i]+vals[j], Worth: worth, Texture: 
+                new Material(new Card_Texture(),
+                {color: hex_color("#000000"), ambient: 1, texture: new Texture(fName, "NEAREST") })
+                };
+                this.modern_deck.push(card);
+            }
+        }
         for(var i = this.deck.length-1; i > 0; --i){
             var j = Math.floor(Math.random() * (i + 1));
             var k = this.deck[i];
             this.deck[i] = this.deck[j];
             this.deck[j] = k;
+            var l = this.modern_deck[i];
+            this.modern_deck[i] = this.modern_deck[j];
+            this.modern_deck[j] = l;
         }
 
 
@@ -96,6 +115,7 @@ export class BlackJack extends Scene {
         this.player_total = 0;
         this.dealer_total = 0;
         this.table_texture = 0;
+        this.card_texture = 0;
         this.c1;
         this.c2;
         this.c3;
@@ -124,14 +144,24 @@ export class BlackJack extends Scene {
         this.key_triggered_button("Stand", ["S"], () => this.stand = () => 1);
         this.key_triggered_button("Double", ["D"], () => this.double = () => 1);
         this.new_line();
-        this.key_triggered_button("Green Table", ["G"], () => {
+        this.key_triggered_button("Green Table", ["S"], () => {
             this.table_texture = 0;
         });
-        this.key_triggered_button("Blue Table", ["B"], () => {
+        this.key_triggered_button("Blue Table", ["S"], () => {
             this.table_texture = 1;
         });
-        this.key_triggered_button("Red Table", ["R"], () => {
+        this.key_triggered_button("Red Table", ["S"], () => {
             this.table_texture = 2;
+        });
+        this.new_line();
+        this.key_triggered_button("Classic Deck", ["S"], () => {
+            this.card_texture = 0;
+        });
+        this.key_triggered_button("Modern Deck", ["S"], () => {
+            this.card_texture = 1;
+        });
+        this.key_triggered_button("Fun Deck", ["S"], () => {
+            this.card_texture = 1;
         });
         this.new_line();
         this.key_triggered_button("Reset", ["R"], () => this.reset = () => 1);
@@ -311,13 +341,55 @@ export class BlackJack extends Scene {
             this.shapes.text.draw(context, program_state, text_transform, this.materials.text);
         }
 
+        if (this.card_texture == 0) {
+            this.c1 = this.classic_c1;
+            this.c2 = this.classic_c2;
+            this.c3 = this.classic_c3;
+            this.c4 = this.classic_c4;
+            this.c5 = this.classic_c5;
+            this.c6 = this.classic_c6;
+            this.c7 = this.classic_c7;
+            this.c8 = this.classic_c8;
+            this.c9 = this.classic_c9;
+            this.c10 = this.classic_c10;
+        } else if (this.card_texture == 1) {
+            this.c1 = this.modern_c1;
+            this.c2 = this.modern_c2;
+            this.c3 = this.modern_c3;
+            this.c4 = this.modern_c4;
+            this.c5 = this.modern_c5;
+            this.c6 = this.modern_c6;
+            this.c7 = this.modern_c7;
+            this.c8 = this.modern_c8;
+            this.c9 = this.modern_c9;
+            this.c10 = this.modern_c10;
+        } else {
+
+        }
 
         if(this.deal && this.deal() !== null){
-            if(this.dealt == -1){           
-                this.c1 = this.deck.pop();
-                this.c2 = this.deck.pop();
-                this.c3 = this.deck.pop();
-                this.c4 = this.deck.pop();
+            if(this.dealt == -1){
+                this.classic_c1 = this.deck.pop();
+                this.classic_c2 = this.deck.pop();
+                this.classic_c3 = this.deck.pop();
+                this.classic_c4 = this.deck.pop();
+                this.modern_c1 = this.modern_deck.pop();
+                this.modern_c2 = this.modern_deck.pop();
+                this.modern_c3 = this.modern_deck.pop();
+                this.modern_c4 = this.modern_deck.pop();
+                if (this.card_texture == 0) {
+                    this.c1 = this.classic_c1;
+                    this.c2 = this.classic_c2;
+                    this.c3 = this.classic_c3;
+                    this.c4 = this.classic_c4;
+                } else if (this.card_texture == 1) {
+                    this.c1 = this.modern_c1;
+                    this.c2 = this.modern_c2;
+                    this.c3 = this.modern_c3;
+                    this.c4 = this.modern_c4;
+                }  else {
+
+                }
                 this.player_total += this.c1.Worth;
                 this.player_total += this.c2.Worth;
                 this.dealer_total += this.c3.Worth;
@@ -417,7 +489,15 @@ export class BlackJack extends Scene {
             }
             else{
                 if(this.dealt == 1){
-                    this.c5 = this.deck.pop();
+                    this.classic_c5 = this.deck.pop();
+                    this.modern_c5 = this.modern_deck.pop();
+                    if (this.card_texture == 0) {
+                        this.c5 = this.classic_c5;
+                    } else if (this.card_texture == 1) {
+                        this.c5 = this.modern_c5;
+                    }  else {
+
+                    }
                     this.player_total += this.c5.Worth;
                     this.dealt = 2;
                     a = t-12;
@@ -446,7 +526,15 @@ export class BlackJack extends Scene {
             }
             else{
                 if(this.dealt == 2){
-                    this.c6 = this.deck.pop();
+                    this.classic_c6 = this.deck.pop();
+                    this.modern_c6 = this.modern_deck.pop();
+                    if (this.card_texture == 0) {
+                        this.c6 = this.classic_c6;
+                    } else if (this.card_texture == 1) {
+                        this.c6 = this.modern_c6;
+                    }  else {
+
+                    }
                     this.player_total += this.c6.Worth;
                     this.dealt = 3;
                     a = t-15;
@@ -475,7 +563,15 @@ export class BlackJack extends Scene {
             }
             else{
                 if(this.dealt == 3){
-                    this.c7 = this.deck.pop();
+                    this.classic_c7 = this.deck.pop();
+                    this.modern_c7 = this.modern_deck.pop();
+                    if (this.card_texture == 0) {
+                        this.c7 = this.classic_c7;
+                    } else if (this.card_texture == 1) {
+                        this.c7 = this.modern_c7;
+                    }  else {
+
+                    }
                     this.player_total += this.c7.Worth;
                     this.dealt = 4;
                     a = t-18;
@@ -526,7 +622,15 @@ export class BlackJack extends Scene {
             if(this.dealer_total < 17 || this.dealer_dealt >= 1){
                 if(this.dealer_dealt == -1){
                     a = t-21;
-                    this.c8 = this.deck.pop();
+                    this.classic_c8 = this.deck.pop();
+                    this.modern_c8 = this.modern_deck.pop();
+                    if (this.card_texture == 0) {
+                        this.c8 = this.classic_c8;
+                    } else if (this.card_texture == 1) {
+                        this.c8 = this.modern_c8;
+                    }  else {
+
+                    }
                     this.dealer_total += this.c8.Worth;
                     this.dealer_dealt = 1;
                 }
@@ -549,7 +653,15 @@ export class BlackJack extends Scene {
                 if((this.dealer_total < 17 || this.dealer_dealt >= 2) && (t-a) > 24){
                     if(this.dealer_dealt == 1){
                         a = t-24;
-                        this.c9 = this.deck.pop();
+                        this.classic_c9 = this.deck.pop();
+                        this.modern_c9 = this.modern_deck.pop();
+                        if (this.card_texture == 0) {
+                            this.c9 = this.classic_c9;
+                        } else if (this.card_texture == 1) {
+                            this.c9 = this.modern_c9;
+                        }  else {
+
+                        }
                         this.dealer_total += this.c9.Worth;
                         this.dealer_dealt = 2;
                     }
@@ -572,7 +684,15 @@ export class BlackJack extends Scene {
                     if((this.dealer_total < 17 || this.dealer_dealt >= 3) && (t-a) > 27){
                         if(this.dealer_dealt == 2){
                             a = t-27;
-                            this.c10 = this.deck.pop();
+                            this.classic_c10 = this.deck.pop();
+                            this.modern_c10 = this.modern_deck.pop();
+                            if (this.card_texture == 0) {
+                                this.c10 = this.classic_c10;
+                            } else if (this.card_texture == 1) {
+                                this.c10 = this.modern_c10;
+                            }  else {
+
+                            }
                             this.dealer_total += this.c10.Worth;
                             this.dealer_dealt = 3;
                         }
