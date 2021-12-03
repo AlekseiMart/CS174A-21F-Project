@@ -596,7 +596,7 @@ const Phong_Shader = defs.Phong_Shader =
                 // on to the next phase (fragment shader), then interpolated per-fragment, weighted by the
                 // pixel fragment's proximity to each of the 3 vertices (barycentric interpolation).
                 varying vec3 N, vertex_worldspace;
-                // ***** PHONG SHADING HAPPENS HERE: *****                                       
+                // ***** PHONG SHADING HAPPENS HERE: *****
                 vec3 phong_model_lights( vec3 N, vec3 vertex_worldspace ){                                        
                     // phong_model_lights():  Add up the lights' contributions.
                     vec3 E = normalize( camera_center - vertex_worldspace );
@@ -724,6 +724,8 @@ const Textured_Phong = defs.Textured_Phong =
         // **Textured_Phong** is a Phong Shader extended to addditionally decal a
         // texture image over the drawn shape, lined up according to the texture
         // coordinates that are stored at each shape vertex.
+        
+
         vertex_glsl_code() {
             // ********* VERTEX SHADER *********
             return this.shared_glsl_code() + `
@@ -761,7 +763,32 @@ const Textured_Phong = defs.Textured_Phong =
                                                                              // Compute an initial (ambient) color:
                     gl_FragColor = vec4( ( tex_color.xyz + shape_color.xyz ) * ambient, shape_color.w * tex_color.w ); 
                                                                              // Compute the final color with contributions from lights:
-                    gl_FragColor.xyz += phong_model_lights( normalize( N ), vertex_worldspace );
+                    vec3 E = normalize( camera_center - vertex_worldspace );
+                    vec3 result = vec3( 0.0 );
+                    for(int i = 0; i < N_LIGHTS; i++){
+                        // Lights store homogeneous coords - either a position or vector.  If w is 0, the 
+                        // light will appear directional (uniform direction from all points), and we 
+                        // simply obtain a vector towards the light by directly using the stored value.
+                        // Otherwise if w is 1 it will appear as a point light -- compute the vector to 
+                        // the point light's location from the current surface point.  In either case, 
+                        // fade (attenuate) the light as the vector needed to reach it gets longer.  
+                        vec3 surface_to_light_vector = light_positions_or_vectors[i].xyz - 
+                                                       light_positions_or_vectors[i].w * vertex_worldspace;                                             
+                        float distance_to_light = length( surface_to_light_vector );
+        
+                        vec3 L = normalize( surface_to_light_vector );
+                        vec3 H = normalize( L + E );
+                        // Compute the diffuse and specular components from the Phong
+                        // Reflection Model, using Blinn's "halfway vector" method:
+                        float diffuse  =      max( dot( N, L ), 0.0 );
+                        float specular = pow( max( dot( N, H ), 0.0 ), smoothness );
+                        float attenuation = 1.0 / (1.0 + light_attenuation_factors[i] * distance_to_light * distance_to_light );
+                        
+                        vec3 light_contribution = tex_color.xyz * light_colors[i].xyz * diffusivity * diffuse
+                                                                  + light_colors[i].xyz * specularity * specular;
+                        result += attenuation * light_contribution;
+                    }
+                    gl_FragColor.xyz += result;
                   } `;
         }
 

@@ -33,13 +33,13 @@ export class BlackJack extends Scene {
             player: new Material(new defs.Phong_Shader(),
                 {ambient: 1, diffusivity: 1, color: hex_color("#ffffff")}),
             card_deck: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/card_deck.jpg", "NEAREST"),}),
+                color: hex_color("#000000"), ambient: .9, specularity: .5, texture: new Texture("assets/cards/card_deck.jpg", "NEAREST"),}),
             back: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/Back.jpg", "NEAREST"),}), 
+                color: hex_color("#000000"), ambient: .2, specularity: 1, texture: new Texture("assets/cards/Back.jpg", "NEAREST"),}), 
             fancy_back: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/Fancy/back.png", "NEAREST"),}), 
+                color: hex_color("#000000"), ambient: .2, specularity: 1, texture: new Texture("assets/Fancy/back.png", "NEAREST"),}), 
             animal_back: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/Animals/back001.png", "NEAREST"),}), 
+                color: hex_color("#000000"), ambient: .2, specularity: 1, texture: new Texture("assets/Animals/back001.png", "NEAREST"),}), 
             // shadow: new Material(new Textured_Phong(), {
             //     color: hex_color("#5D5C5D"), ambient: 0.2, texture: new Texture("assets/tabletop.jpg", "NEAREST"),}),
             shadow: new Material(new defs.Phong_Shader(),
@@ -51,23 +51,23 @@ export class BlackJack extends Scene {
             auxiliary_blur: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/custom_blur.png", "NEAREST"),}), 
             green_table: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: .8, specularity: .2, texture: new Texture("assets/green2.jpg", "NEAREST"),}), 
+                color: hex_color("#000000"), ambient: 0, specularity: 0, texture: new Texture("assets/green2.jpg", "NEAREST"),}), 
             blue_table: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: .8, specularity: .2, texture: new Texture("assets/blue.jpg", "NEAREST"),}), 
+                color: hex_color("#000000"), ambient: .2, specularity: 0, texture: new Texture("assets/blue.jpg", "NEAREST"),}), 
             red_table: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: .8, specularity: .2, texture: new Texture("assets/red.jpg", "NEAREST"),}), 
+                color: hex_color("#000000"), ambient: 0, specularity: 0, texture: new Texture("assets/red.jpg", "NEAREST"),}), 
             green_tableedge: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/table_edge.jpg", "NEAREST"),}), 
+                color: hex_color("#000000"), ambient: .4, specularity: 1, texture: new Texture("assets/table_edge.jpg", "NEAREST"),}), 
             blue_tableedge: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: 1, specularity: 1, texture: new Texture("assets/table_edge2.jpg", "NEAREST"),}), 
+                color: hex_color("#000000"), ambient: .4, specularity: 1, texture: new Texture("assets/table_edge2.jpg", "NEAREST"),}), 
             red_tableedge: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: .8, specularity: 1, texture: new Texture("assets/table_edge3.jpg", "NEAREST"),}), 
+                color: hex_color("#000000"), ambient: .4, specularity: 0, texture: new Texture("assets/table_edge3.jpg", "NEAREST"),}), 
             background: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: .8, specularity: 1, texture: new Texture("assets/background.jpg", "NEAREST"),}), 
+                color: hex_color("#000000"), ambient: 1, specularity: 0, texture: new Texture("assets/background.jpg", "NEAREST"),}), 
             text: new Material(new Textured_Phong(), {
                 ambient: 1, diffusivity: 0, specularity: 0, texture: new Texture("assets/text.png")}),
             text_background: new Material(new defs.Phong_Shader(),
-                {ambient: 1, diffusivity: 1, color: hex_color("242424")}),
+                {ambient: 1, diffusivity: 0, color: hex_color("242424")}),
         }
         //card deck creation + card textures
         var suit = ["s", "h", "d", "c"];
@@ -83,7 +83,7 @@ export class BlackJack extends Scene {
                 let fName = "assets/cards/" + suit[i] + vals[j] + ".png"
                 var card = {suitVal: suit[i]+vals[j], Worth: worth, Texture: 
                 new Material(new Card_Texture(),
-                {color: hex_color("#000000"), ambient: 1, texture: new Texture(fName, "NEAREST") })
+                {color: hex_color("#000000"), ambient: 1, specularity: .5, texture: new Texture(fName, "NEAREST") })
                 };
                 this.deck.push(card);
             }
@@ -99,7 +99,7 @@ export class BlackJack extends Scene {
                 let fName = "assets/Fancy/" + suit[i] + vals[j] + ".png"
                 var card = {suitVal: suit[i]+vals[j], Worth: worth, Texture: 
                 new Material(new Textured_Phong(),
-                {color: hex_color("#000000"), ambient: 1, texture: new Texture(fName, "NEAREST") })
+                {color: hex_color("#000000"), ambient: .5, specularity: .5, texture: new Texture(fName, "NEAREST") })
                 };
                 this.modern_deck.push(card);
             }
@@ -115,7 +115,7 @@ export class BlackJack extends Scene {
                 let fName = "assets/Animals/" + suit[i] + vals[j] + ".png"
                 var card = {suitVal: suit[i]+vals[j], Worth: worth, Texture: 
                 new Material(new Card_Texture(),
-                {color: hex_color("#000000"), ambient: 1, texture: new Texture(fName, "NEAREST") })
+                {color: hex_color("#000000"), ambient: 1, specularity: .5, texture: new Texture(fName, "NEAREST") })
                 };
                 this.animal_deck.push(card);
             }
@@ -337,9 +337,9 @@ export class BlackJack extends Scene {
         let card_deck_top_transform = model_transform;
         let card_deck_transform = model_transform;
 
-        const light_position = vec4(0, 10, 10, 1);  
+        const light_position = vec4(0, 0, 30, 1);  
         // The parameters of the Light are: position, color, size
-        program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 10)];
+        program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 1000)];
         let background_transform = Mat4.identity().times(Mat4.rotation(Math.PI / 3.5, 1, 0, 0)).times(Mat4.scale(30, 20, 1)).times(Mat4.translation(0, 0, -10));
         this.shapes.one_card.draw(context, program_state, background_transform, this.materials.background);
 
