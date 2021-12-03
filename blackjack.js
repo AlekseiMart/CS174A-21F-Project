@@ -183,7 +183,7 @@ export class BlackJack extends Scene {
         this.key_triggered_button("Fancy Deck", ["F"], () => {
             this.card_texture = 1;
         });
-        this.key_triggered_button("Animal Deck", ["F"], () => {
+        this.key_triggered_button("Animal Deck", ["A"], () => {
             this.card_texture = 2;
         });
         this.new_line();
