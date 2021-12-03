@@ -681,12 +681,12 @@ export class BlackJack extends Scene {
                     this.make_shadow(context, program_state, model_transform);
                 }
                 else if((t-a) < 21){
-                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.975-(t-a-20))*1)).times(Mat4.translation(-3.4,-4.5, 0));
+                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.97-(t-a-20))*1)).times(Mat4.translation(-3.4,-4.5, 0));
                     this.shapes.one_card.draw(context, program_state, model_transform, this.c7.Texture);
                     this.make_shadow(context, program_state, model_transform);
                 }
                 else{
-                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.025)).times(Mat4.translation(-3.4, -4.5, 0));
+                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.03)).times(Mat4.translation(-3.4, -4.5, 0));
                     this.shapes.one_card.draw(context, program_state, model_transform, this.c7.Texture);
                     this.make_shadow(context, program_state, model_transform);
                 }
