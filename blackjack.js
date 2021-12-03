@@ -139,6 +139,9 @@ export class BlackJack extends Scene {
         this.bet = 0;
         this.add = 0;
         this.dealt = -1;
+        this.win_state = -2;         // 0 = tie, -1 = loss, 1 = win, -2 = unset
+        this.time_at_end = -1;      // program time at which win_state is determined
+        this.time_before_resetting = 10     // 10 seconds before auto resetting
         this.dealer_dealt = -2;
         this.player_total = 0;
         this.dealer_total = 0;
@@ -407,6 +410,29 @@ export class BlackJack extends Scene {
         text1_transform = Mat4.identity().times(Mat4.translation(3.5, -4, .1)).times(Mat4.scale(.5, .5, 1));
         this.shapes.long_text.set_string("Bet: " + this.bet.toString(), context.context);
         this.shapes.long_text.draw(context, program_state, text1_transform, this.materials.text);
+
+
+        // display or terminate according to this.win_state
+        if (this.win_state > -2) {
+            if (this.time_at_end == -1) {
+                this.time_at_end = t;
+            }
+
+            // calculate time before resetting
+            let cur_time = this.time_before_resetting - Math.ceil(t - this.time_at_end);
+            console.log(cur_time);
+
+            text1_transform = Mat4.identity().times(Mat4.translation(-12, -1, .1)).times(Mat4.scale(1, 1, 1));
+            this.shapes.long_text.set_string("T-" + cur_time.toString(), context.context);
+            this.shapes.long_text.draw(context, program_state, text1_transform, this.materials.text);
+
+            if (cur_time <= 0) {
+                this.win_state = -2;
+                this.reset = () => 1;
+            }
+        }
+
+
 
         if (this.card_texture == 0) {
             this.c1 = this.classic_c1;
@@ -721,12 +747,14 @@ export class BlackJack extends Scene {
                          this.balance += this.bet + this.bet;
                          this.add = 1;
                     }
+                    this.win_state = 1;
                     let text1_transform = Mat4.identity().times(Mat4.translation(-4, 0, .1)).times(Mat4.scale(.5, .5, 1));
                     this.shapes.won.set_string("You Won", context.context);
                     this.shapes.won.draw(context, program_state, text1_transform, this.materials.text);
                     console.log("You win!");
                 }
                 else if(this.player_total < this.dealer_total){
+                    this.win_state = -1;
                     let text1_transform = Mat4.identity().times(Mat4.translation(-4, 0, .1)).times(Mat4.scale(.5, .5, 1));
                     this.shapes.lost.set_string("You Lost", context.context);
                     this.shapes.lost.draw(context, program_state, text1_transform, this.materials.text);
@@ -737,6 +765,7 @@ export class BlackJack extends Scene {
                          this.balance += this.bet;
                          this.add = 1;
                     }
+                    this.win_state = 0;
                     let text1_transform = Mat4.identity().times(Mat4.translation(-4, 0, .1)).times(Mat4.scale(.5, .5, 1));
                     this.shapes.lost.set_string("You Tied", context.context);
                     this.shapes.lost.draw(context, program_state, text1_transform, this.materials.text);
@@ -747,6 +776,7 @@ export class BlackJack extends Scene {
                         this.balance += this.bet + this.bet;
                         this.add = 1;
                     }
+                    this.win_state = 1;
                     let text1_transform = Mat4.identity().times(Mat4.translation(-4, 0, .1)).times(Mat4.scale(.5, .5, 1));
                     this.shapes.won.set_string("You Won", context.context);
                     this.shapes.won.draw(context, program_state, text1_transform, this.materials.text);
@@ -874,12 +904,14 @@ export class BlackJack extends Scene {
                 this.balance += this.bet + this.bet + this.bet/2;
                 this.add = 1;
             }
+            this.win_state = 1;
             let text1_transform = Mat4.identity().times(Mat4.translation(-4, 0, .1)).times(Mat4.scale(.5, .5, 1));
             this.shapes.won.set_string("You Won", context.context);
             this.shapes.won.draw(context, program_state, text1_transform, this.materials.text);
             console.log("BLACK JACK!! You won!");
         }
         else if(this.player_total > 21){
+            this.win_state = -1;
             let text1_transform = Mat4.identity().times(Mat4.translation(-4, 0, .1)).times(Mat4.scale(.5, .5, 1));
             this.shapes.lost.set_string("You Lost", context.context);
             this.shapes.lost.draw(context, program_state, text1_transform, this.materials.text);
@@ -907,6 +939,7 @@ export class BlackJack extends Scene {
                         this.bet += this.bet;
                         this.hit1 = () => 1;
                         if(this.player_total > 21){
+                            this.win_state = -1;
                             let text1_transform = Mat4.identity().times(Mat4.translation(-4, 0, .1)).times(Mat4.scale(.5, .5, 1));
                             this.shapes.lost.set_string("You Lost", context.context);
                             this.shapes.lost.draw(context, program_state, text1_transform, this.materials.text);
