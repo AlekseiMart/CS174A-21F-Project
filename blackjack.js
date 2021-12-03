@@ -698,6 +698,21 @@ export class BlackJack extends Scene {
                 this.dealer_total += this.c4.Worth;
                 this.dealer_dealt = -1;
             }
+            if(this.dealt >= 2){
+                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.015)).times(Mat4.translation(-4.2, -4.5, 0));
+                    this.shapes.one_card.draw(context, program_state, model_transform, this.c5.Texture);
+                    this.make_shadow(context, program_state, model_transform);
+                    if(this.dealt >= 3){
+                            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.02)).times(Mat4.translation(-3.8, -4.5, 0));
+                            this.shapes.one_card.draw(context, program_state, model_transform, this.c6.Texture);
+                            this.make_shadow(context, program_state, model_transform);
+                            if(this.dealt >= 4){
+                                model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.03)).times(Mat4.translation(-3.4, -4.5, 0));
+                                this.shapes.one_card.draw(context, program_state, model_transform, this.c7.Texture);
+                                this.make_shadow(context, program_state, model_transform);
+                            }
+                    }
+            }
             //Win checks
             if(this.dealer_total > 16){
               
