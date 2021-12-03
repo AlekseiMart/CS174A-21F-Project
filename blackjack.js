@@ -24,6 +24,8 @@ export class BlackJack extends Scene {
             tableedge: new defs.Torus(100, 100),
             text: new Text_Line(2),
             long_text: new Text_Line(10),
+            won: new Text_Line(7),
+            lost: new Text_Line(8),
         };
 
         // *** Materials
@@ -135,6 +137,7 @@ export class BlackJack extends Scene {
         this.initial_camera_location = Mat4.look_at(vec3(0, -17, 19), vec3(0, 3, -3), vec3(0, 1, 0));
         this.balance = 1000;
         this.bet = 0;
+        this.add = 0;
         this.dealt = -1;
         this.dealer_dealt = -2;
         this.player_total = 0;
@@ -699,15 +702,39 @@ export class BlackJack extends Scene {
             if(this.dealer_total > 16){
               
                 if(this.dealer_total > 21){
+                    if(this.add == 0){
+                         this.balance += this.bet + this.bet;
+                         this.add = 1;
+                    }
+                    let text1_transform = Mat4.identity().times(Mat4.translation(-4, 0, .1)).times(Mat4.scale(.5, .5, 1));
+                    this.shapes.won.set_string("You Won", context.context);
+                    this.shapes.won.draw(context, program_state, text1_transform, this.materials.text);
                     console.log("You win!");
                 }
                 else if(this.player_total < this.dealer_total){
+                    let text1_transform = Mat4.identity().times(Mat4.translation(-4, 0, .1)).times(Mat4.scale(.5, .5, 1));
+                    this.shapes.lost.set_string("You Lost", context.context);
+                    this.shapes.lost.draw(context, program_state, text1_transform, this.materials.text);
                     console.log("You lose.");
                 }
                 else if(this.dealer_total == this.player_total){
+                    if(this.add == 0){
+                         this.balance += this.bet;
+                         this.add = 1;
+                    }
+                    let text1_transform = Mat4.identity().times(Mat4.translation(-4, 0, .1)).times(Mat4.scale(.5, .5, 1));
+                    this.shapes.lost.set_string("You Tied", context.context);
+                    this.shapes.lost.draw(context, program_state, text1_transform, this.materials.text);
                     console.log("Push");
                 }
                 else{
+                    if(this.add == 0){
+                        this.balance += this.bet + this.bet;
+                        this.add = 1;
+                    }
+                    let text1_transform = Mat4.identity().times(Mat4.translation(-4, 0, .1)).times(Mat4.scale(.5, .5, 1));
+                    this.shapes.won.set_string("You Won", context.context);
+                    this.shapes.won.draw(context, program_state, text1_transform, this.materials.text);
                     console.log("You win.");
                 }
             }
@@ -814,12 +841,12 @@ export class BlackJack extends Scene {
                             this.make_shadow(context, program_state, model_transform);
                         }
                         else if((t-a) < 30){
-                            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.975-(t-a-29))*1)).times(Mat4.translation(-3.4,0, 0));
+                            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.97-(t-a-29))*1)).times(Mat4.translation(-3.4,0, 0));
                             this.shapes.one_card.draw(context, program_state, model_transform, this.c10.Texture);
                             this.make_shadow(context, program_state, model_transform);
                         }
                         else{
-                            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.025)).times(Mat4.translation(-3.4, 0, 0));
+                            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.03)).times(Mat4.translation(-3.4, 0, 0));
                             this.shapes.one_card.draw(context, program_state, model_transform, this.c10.Texture);
                             this.make_shadow(context, program_state, model_transform);
                         }
@@ -828,9 +855,19 @@ export class BlackJack extends Scene {
             }
         }
         if(this.player_total == 21 && this.dealt == 1){
+            if(this.add == 0){
+                this.balance += this.bet + this.bet + this.bet/2;
+                this.add = 1;
+            }
+            let text1_transform = Mat4.identity().times(Mat4.translation(-4, 0, .1)).times(Mat4.scale(.5, .5, 1));
+            this.shapes.won.set_string("You Won", context.context);
+            this.shapes.won.draw(context, program_state, text1_transform, this.materials.text);
             console.log("BLACK JACK!! You won!");
         }
         else if(this.player_total > 21){
+            let text1_transform = Mat4.identity().times(Mat4.translation(-4, 0, .1)).times(Mat4.scale(.5, .5, 1));
+            this.shapes.lost.set_string("You Lost", context.context);
+            this.shapes.lost.draw(context, program_state, text1_transform, this.materials.text);
             console.log("You lose.");
         }
         if(this.reset && this.reset() !== null){
@@ -845,6 +882,7 @@ export class BlackJack extends Scene {
             this.stand = 0;
             this.double = 0;
             this.bet = 0;
+            this.add = 0;
             this.reset = 0;
         }
         this.card_test_transform = Mat4.translation(0, 0, 2);
