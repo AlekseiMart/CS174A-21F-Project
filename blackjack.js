@@ -50,7 +50,8 @@ export class BlackJack extends Scene {
                 color: hex_color("#000000"), ambient: 1, specularity: 1, texture: new Texture("assets/table_edge2.jpg", "NEAREST"),}), 
             red_tableedge: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"), ambient: .8, specularity: 1, texture: new Texture("assets/table_edge3.jpg", "NEAREST"),}), 
-            
+            background: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: .8, specularity: 1, texture: new Texture("assets/background.jpg", "NEAREST"),}), 
         }
         //card deck creation + card textures
         var suit = ["s", "h", "d", "c"];
@@ -236,6 +237,8 @@ export class BlackJack extends Scene {
         const light_position = vec4(0, 1, 0, 1);  
         // The parameters of the Light are: position, color, size
         program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 10)];
+        let background_transform = Mat4.identity().times(Mat4.rotation(Math.PI / 3.5, 1, 0, 0)).times(Mat4.scale(27, 15, 1)).times(Mat4.translation(0, 0, -10));
+        this.shapes.one_card.draw(context, program_state, background_transform, this.materials.background);
 
         model_transform = model_transform.times(Mat4.scale(.5, .5, .5)).times(Mat4.translation(0,-9,0.1));
         //this.shapes.player.draw(context, program_state, model_transform, this.materials.player);
