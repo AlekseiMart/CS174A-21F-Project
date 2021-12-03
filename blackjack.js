@@ -33,13 +33,13 @@ export class BlackJack extends Scene {
             player: new Material(new defs.Phong_Shader(),
                 {ambient: 1, diffusivity: 1, color: hex_color("#ffffff")}),
             card_deck: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: .9, specularity: .5, texture: new Texture("assets/cards/card_deck.jpg", "NEAREST"),}),
+                color: hex_color("#000000"), ambient: .7, specularity: .5, diffusivity: 1, texture: new Texture("assets/cards/card_deck.jpg", "NEAREST"),}),
             back: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: .2, specularity: 1, texture: new Texture("assets/cards/Back.jpg", "NEAREST"),}), 
+                color: hex_color("#000000"), ambient: .5, specularity: 1, texture: new Texture("assets/cards/Back.jpg", "NEAREST"),}), 
             fancy_back: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: .2, specularity: 1, texture: new Texture("assets/Fancy/back.png", "NEAREST"),}), 
+                color: hex_color("#000000"), ambient: .5, specularity: 1, texture: new Texture("assets/Fancy/back.png", "NEAREST"),}), 
             animal_back: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: .2, specularity: 1, texture: new Texture("assets/Animals/back001.png", "NEAREST"),}), 
+                color: hex_color("#000000"), ambient: .5, specularity: 1, texture: new Texture("assets/Animals/back001.png", "NEAREST"),}), 
             // shadow: new Material(new Textured_Phong(), {
             //     color: hex_color("#5D5C5D"), ambient: 0.2, texture: new Texture("assets/tabletop.jpg", "NEAREST"),}),
             shadow: new Material(new defs.Phong_Shader(),
@@ -59,7 +59,7 @@ export class BlackJack extends Scene {
             green_tableedge: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"), ambient: .4, specularity: 1, texture: new Texture("assets/table_edge.jpg", "NEAREST"),}), 
             blue_tableedge: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: .4, specularity: 1, texture: new Texture("assets/table_edge2.jpg", "NEAREST"),}), 
+                color: hex_color("#000000"), ambient: .8, specularity: 1, texture: new Texture("assets/table_edge2.jpg", "NEAREST"),}), 
             red_tableedge: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"), ambient: .4, specularity: 0, texture: new Texture("assets/table_edge3.jpg", "NEAREST"),}), 
             background: new Material(new Textured_Phong(), {
@@ -67,7 +67,7 @@ export class BlackJack extends Scene {
             text: new Material(new Textured_Phong(), {
                 ambient: 1, diffusivity: 0, specularity: 0, texture: new Texture("assets/text.png")}),
             text_background: new Material(new defs.Phong_Shader(),
-                {ambient: 1, diffusivity: 0, color: hex_color("242424")}),
+                {ambient: 1, diffusivity: 0, specularity: 0, color: hex_color("242424")}),
         }
         //card deck creation + card textures
         var suit = ["s", "h", "d", "c"];
@@ -83,7 +83,7 @@ export class BlackJack extends Scene {
                 let fName = "assets/cards/" + suit[i] + vals[j] + ".png"
                 var card = {suitVal: suit[i]+vals[j], Worth: worth, Texture: 
                 new Material(new Card_Texture(),
-                {color: hex_color("#000000"), ambient: 1, specularity: .5, texture: new Texture(fName, "NEAREST") })
+                {color: hex_color("#000000"), ambient: 1, specularity: 0, texture: new Texture(fName, "NEAREST") })
                 };
                 this.deck.push(card);
             }
@@ -99,7 +99,7 @@ export class BlackJack extends Scene {
                 let fName = "assets/Fancy/" + suit[i] + vals[j] + ".png"
                 var card = {suitVal: suit[i]+vals[j], Worth: worth, Texture: 
                 new Material(new Textured_Phong(),
-                {color: hex_color("#000000"), ambient: .5, specularity: .5, texture: new Texture(fName, "NEAREST") })
+                {color: hex_color("#000000"), ambient: .5, specularity: 0, texture: new Texture(fName, "NEAREST") })
                 };
                 this.modern_deck.push(card);
             }
@@ -115,7 +115,7 @@ export class BlackJack extends Scene {
                 let fName = "assets/Animals/" + suit[i] + vals[j] + ".png"
                 var card = {suitVal: suit[i]+vals[j], Worth: worth, Texture: 
                 new Material(new Card_Texture(),
-                {color: hex_color("#000000"), ambient: 1, specularity: .5, texture: new Texture(fName, "NEAREST") })
+                {color: hex_color("#000000"), ambient: 1, specularity: 0, texture: new Texture(fName, "NEAREST") })
                 };
                 this.animal_deck.push(card);
             }
@@ -166,7 +166,8 @@ export class BlackJack extends Scene {
         let possible_bets = [1, 10, 50, 100];       // modify to add any number of bets
         for (let i = 0; i < possible_bets.length; i++) {
             let cur_bet = possible_bets[i];
-            this.key_triggered_button("Bet " + cur_bet, [i+1], () => {
+            let num = i+5;
+            this.key_triggered_button("Bet " + cur_bet, [num.toString()], () => {
                 if(this.dealt == -1){
                     if (cur_bet > this.balance) return;
                     this.balance -= cur_bet;
@@ -179,34 +180,34 @@ export class BlackJack extends Scene {
 
         this.key_triggered_button("Deal Cards", ["0"], () => this.deal = () => 1);
         this.new_line();
-        this.key_triggered_button("HitFirst", ["H"], () => this.hit1 = () => 1);
-        this.key_triggered_button("HitSecond", ["J"], () => this.hit2 = () => 1);
-        this.key_triggered_button("HitThird", ["K"], () => this.hit3 = () => 1);
+        this.key_triggered_button("HitFirst", ["h"], () => this.hit1 = () => 1);
+        this.key_triggered_button("HitSecond", ["j"], () => this.hit2 = () => 1);
+        this.key_triggered_button("HitThird", ["k"], () => this.hit3 = () => 1);
         this.new_line();
-        this.key_triggered_button("Stand", ["S"], () => this.stand = () => 1);
-        this.key_triggered_button("Double", ["D"], () => this.double = () => 1);
+        this.key_triggered_button("Stand", ["n"], () => this.stand = () => 1);
+        this.key_triggered_button("Double", ["m"], () => this.double = () => 1);
         this.new_line();
-        this.key_triggered_button("Green Table", ["G"], () => {
+        this.key_triggered_button("Green Table", ["g"], () => {
             this.table_texture = 0;
         });
-        this.key_triggered_button("Blue Table", ["B"], () => {
+        this.key_triggered_button("Blue Table", ["b"], () => {
             this.table_texture = 1;
         });
-        this.key_triggered_button("Red Table", ["R"], () => {
+        this.key_triggered_button("Red Table", ["v"], () => {
             this.table_texture = 2;
         });
         this.new_line();
-        this.key_triggered_button("Classic Deck", ["C"], () => {
+        this.key_triggered_button("Classic Deck", ["i"], () => {
             this.card_texture = 0;
         });
-        this.key_triggered_button("Fancy Deck", ["F"], () => {
+        this.key_triggered_button("Fancy Deck", ["o"], () => {
             this.card_texture = 1;
         });
-        this.key_triggered_button("Animal Deck", ["A"], () => {
+        this.key_triggered_button("Animal Deck", ["p"], () => {
             this.card_texture = 2;
         });
         this.new_line();
-        this.key_triggered_button("Reset", ["R"], () => this.reset = () => 1);
+        this.key_triggered_button("Reset", ["9"], () => this.reset = () => 1);
     }
 
     make_shadow(context, program_state, model_transform) {
@@ -340,7 +341,7 @@ export class BlackJack extends Scene {
         let card_deck_top_transform = model_transform;
         let card_deck_transform = model_transform;
 
-        const light_position = vec4(0, 0, 30, 1);  
+        const light_position = vec4(0, 0, 15, 1);  
         // The parameters of the Light are: position, color, size
         program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 1000)];
         let background_transform = Mat4.identity().times(Mat4.rotation(Math.PI / 3.5, 1, 0, 0)).times(Mat4.scale(30, 20, 1)).times(Mat4.translation(0, 0, -10));
@@ -931,6 +932,70 @@ export class BlackJack extends Scene {
             this.bet = 0;
             this.add = 0;
             this.double = 0;
+            if(this.deck.length < 10){
+                var suit = ["s", "h", "d", "c"];
+                var vals = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
+                this.deck = new Array();
+                for(var i = 0; i < suit.length; ++i){
+                    for(var j = 0; j < vals.length; ++j){
+                        var worth = j + 2;
+                        if (vals[j] == "J" || vals[j] == "Q" || vals[j] == "K")
+                            worth = 10;
+                        if (vals[j] == "A")
+                            worth = 11;
+                        let fName = "assets/cards/" + suit[i] + vals[j] + ".png"
+                        var card = {suitVal: suit[i]+vals[j], Worth: worth, Texture: 
+                        new Material(new Card_Texture(),
+                        {color: hex_color("#000000"), ambient: 1, texture: new Texture(fName, "NEAREST") })
+                        };
+                        this.deck.push(card);
+                    }
+                }
+                this.modern_deck = new Array();
+                for(var i = 0; i < suit.length; ++i){
+                    for(var j = 0; j < vals.length; ++j){
+                        var worth = j + 2;
+                        if (vals[j] == "J" || vals[j] == "Q" || vals[j] == "K")
+                            worth = 10;
+                        if (vals[j] == "A")
+                            worth = 11;
+                        let fName = "assets/Fancy/" + suit[i] + vals[j] + ".png"
+                        var card = {suitVal: suit[i]+vals[j], Worth: worth, Texture: 
+                        new Material(new Textured_Phong(),
+                        {color: hex_color("#000000"), ambient: 1, texture: new Texture(fName, "NEAREST") })
+                        };
+                        this.modern_deck.push(card);
+                    }
+                }
+                this.animal_deck = new Array();
+                for(var i = 0; i < suit.length; ++i){
+                    for(var j = 0; j < vals.length; ++j){
+                        var worth = j + 2;
+                        if (vals[j] == "J" || vals[j] == "Q" || vals[j] == "K")
+                            worth = 10;
+                        if (vals[j] == "A")
+                            worth = 11;
+                        let fName = "assets/Animals/" + suit[i] + vals[j] + ".png"
+                        var card = {suitVal: suit[i]+vals[j], Worth: worth, Texture: 
+                        new Material(new Card_Texture(),
+                        {color: hex_color("#000000"), ambient: 1, texture: new Texture(fName, "NEAREST") })
+                        };
+                        this.animal_deck.push(card);
+                    }
+                }
+                for(var i = this.deck.length-1; i > 0; --i){
+                    var j = Math.floor(Math.random() * (i + 1));
+                    var k = this.deck[i];
+                    this.deck[i] = this.deck[j];
+                    this.deck[j] = k;
+                    var l = this.modern_deck[i];
+                    this.modern_deck[i] = this.modern_deck[j];
+                    this.modern_deck[j] = l;
+                    var m = this.animal_deck[i];
+                    this.animal_deck[i] = this.animal_deck[j];
+                    this.animal_deck[j] = m;
+                }        
+            }
             this.reset = 0;
         }
         if(this.double && this.double() !== null && this.dealt == 1 && this.dealer_dealt == -2){
