@@ -35,6 +35,8 @@ export class BlackJack extends Scene {
                 color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/Back.jpg", "NEAREST"),}), 
             fancy_back: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/Fancy/back.png", "NEAREST"),}), 
+            animal_back: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/Animals/back001.png", "NEAREST"),}), 
             // shadow: new Material(new Textured_Phong(), {
             //     color: hex_color("#5D5C5D"), ambient: 0.2, texture: new Texture("assets/tabletop.jpg", "NEAREST"),}),
             shadow: new Material(new defs.Phong_Shader(),
@@ -99,6 +101,22 @@ export class BlackJack extends Scene {
                 this.modern_deck.push(card);
             }
         }
+        this.animal_deck = new Array();
+        for(var i = 0; i < suit.length; ++i){
+            for(var j = 0; j < vals.length; ++j){
+                var worth = j + 2;
+                if (vals[j] == "J" || vals[j] == "Q" || vals[j] == "K")
+                    worth = 10;
+                if (vals[j] == "A")
+                    worth = 11;
+                let fName = "assets/Animals/" + suit[i] + vals[j] + ".png"
+                var card = {suitVal: suit[i]+vals[j], Worth: worth, Texture: 
+                new Material(new Card_Texture(),
+                {color: hex_color("#000000"), ambient: 1, texture: new Texture(fName, "NEAREST") })
+                };
+                this.animal_deck.push(card);
+            }
+        }
         for(var i = this.deck.length-1; i > 0; --i){
             var j = Math.floor(Math.random() * (i + 1));
             var k = this.deck[i];
@@ -107,6 +125,9 @@ export class BlackJack extends Scene {
             var l = this.modern_deck[i];
             this.modern_deck[i] = this.modern_deck[j];
             this.modern_deck[j] = l;
+            var m = this.animal_deck[i];
+            this.animal_deck[i] = this.animal_deck[j];
+            this.animal_deck[j] = m;
         }
 
 
@@ -162,8 +183,8 @@ export class BlackJack extends Scene {
         this.key_triggered_button("Fancy Deck", ["F"], () => {
             this.card_texture = 1;
         });
-        this.key_triggered_button("Fun Deck", ["F"], () => {
-            this.card_texture = 1;
+        this.key_triggered_button("Animal Deck", ["F"], () => {
+            this.card_texture = 2;
         });
         this.new_line();
         this.key_triggered_button("Reset", ["R"], () => this.reset = () => 1);
@@ -319,7 +340,7 @@ export class BlackJack extends Scene {
         } else if (this.card_texture == 1) {
             this.back = this.materials.fancy_back;
         } else {
-
+            this.back = this.materials.animal_back;
         }
         this.shapes.one_card.draw(context, program_state, card_deck_top_transform, this.back);
         this.shapes.one_card.draw(context, program_state, card_deck_top_transform, this.back);
@@ -374,7 +395,16 @@ export class BlackJack extends Scene {
             this.c9 = this.modern_c9;
             this.c10 = this.modern_c10;
         } else {
-
+            this.c1 = this.animal_c1;
+            this.c2 = this.animal_c2;
+            this.c3 = this.animal_c3;
+            this.c4 = this.animal_c4;
+            this.c5 = this.animal_c5;
+            this.c6 = this.animal_c6;
+            this.c7 = this.animal_c7;
+            this.c8 = this.animal_c8;
+            this.c9 = this.animal_c9;
+            this.c10 = this.animal_c10;
         }
 
         if(this.deal && this.deal() !== null){
@@ -387,6 +417,10 @@ export class BlackJack extends Scene {
                 this.modern_c2 = this.modern_deck.pop();
                 this.modern_c3 = this.modern_deck.pop();
                 this.modern_c4 = this.modern_deck.pop();
+                this.animal_c1 = this.animal_deck.pop();
+                this.animal_c2 = this.animal_deck.pop();
+                this.animal_c3 = this.animal_deck.pop();
+                this.animal_c4 = this.animal_deck.pop();
                 if (this.card_texture == 0) {
                     this.c1 = this.classic_c1;
                     this.c2 = this.classic_c2;
@@ -398,7 +432,10 @@ export class BlackJack extends Scene {
                     this.c3 = this.modern_c3;
                     this.c4 = this.modern_c4;
                 }  else {
-
+                    this.c1 = this.animal_c1;
+                    this.c2 = this.animal_c2;
+                    this.c3 = this.animal_c3;
+                    this.c4 = this.animal_c4;
                 }
                 this.player_total += this.c1.Worth;
                 this.player_total += this.c2.Worth;
@@ -501,12 +538,13 @@ export class BlackJack extends Scene {
                 if(this.dealt == 1){
                     this.classic_c5 = this.deck.pop();
                     this.modern_c5 = this.modern_deck.pop();
+                    this.animal_c5 = this.animal_deck.pop();
                     if (this.card_texture == 0) {
                         this.c5 = this.classic_c5;
                     } else if (this.card_texture == 1) {
                         this.c5 = this.modern_c5;
                     }  else {
-
+                        this.c5 = this.animal_c5;
                     }
                     this.player_total += this.c5.Worth;
                     this.dealt = 2;
@@ -538,12 +576,13 @@ export class BlackJack extends Scene {
                 if(this.dealt == 2){
                     this.classic_c6 = this.deck.pop();
                     this.modern_c6 = this.modern_deck.pop();
+                    this.animal_c6 = this.animal_deck.pop();
                     if (this.card_texture == 0) {
                         this.c6 = this.classic_c6;
                     } else if (this.card_texture == 1) {
                         this.c6 = this.modern_c6;
                     }  else {
-
+                        this.c6 = this.animal_c6;
                     }
                     this.player_total += this.c6.Worth;
                     this.dealt = 3;
@@ -575,12 +614,13 @@ export class BlackJack extends Scene {
                 if(this.dealt == 3){
                     this.classic_c7 = this.deck.pop();
                     this.modern_c7 = this.modern_deck.pop();
+                    this.animal_c7 = this.animal_deck.pop();
                     if (this.card_texture == 0) {
                         this.c7 = this.classic_c7;
                     } else if (this.card_texture == 1) {
                         this.c7 = this.modern_c7;
                     }  else {
-
+                        this.c7 = this.animal_c7;
                     }
                     this.player_total += this.c7.Worth;
                     this.dealt = 4;
@@ -634,12 +674,13 @@ export class BlackJack extends Scene {
                     a = t-21;
                     this.classic_c8 = this.deck.pop();
                     this.modern_c8 = this.modern_deck.pop();
+                    this.animal_c8 = this.animal_deck.pop();
                     if (this.card_texture == 0) {
                         this.c8 = this.classic_c8;
                     } else if (this.card_texture == 1) {
                         this.c8 = this.modern_c8;
                     }  else {
-
+                        this.c8 = this.animal_c8;
                     }
                     this.dealer_total += this.c8.Worth;
                     this.dealer_dealt = 1;
@@ -665,12 +706,13 @@ export class BlackJack extends Scene {
                         a = t-24;
                         this.classic_c9 = this.deck.pop();
                         this.modern_c9 = this.modern_deck.pop();
+                        this.animal_c9 = this.animal_deck.pop();
                         if (this.card_texture == 0) {
                             this.c9 = this.classic_c9;
                         } else if (this.card_texture == 1) {
                             this.c9 = this.modern_c9;
                         }  else {
-
+                            this.c9 = this.animal_c9;
                         }
                         this.dealer_total += this.c9.Worth;
                         this.dealer_dealt = 2;
@@ -696,12 +738,13 @@ export class BlackJack extends Scene {
                             a = t-27;
                             this.classic_c10 = this.deck.pop();
                             this.modern_c10 = this.modern_deck.pop();
+                            this.animal_c10 = this.animal_deck.pop();
                             if (this.card_texture == 0) {
                                 this.c10 = this.classic_c10;
                             } else if (this.card_texture == 1) {
                                 this.c10 = this.modern_c10;
                             }  else {
-
+                                this.c10 = this.animal_c10;
                             }
                             this.dealer_total += this.c10.Worth;
                             this.dealer_dealt = 3;
