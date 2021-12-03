@@ -296,7 +296,7 @@ export class BlackJack extends Scene {
             this.shapes.tableedge.draw(context, program_state, model_transform, this.materials.red_tableedge);
         }
         
-        if (this.dealt == 1) {
+        if (this.dealt > 0) {
             let player_text = this.player_total.toString();
             let dealer_text = this.dealer_total.toString();
             let text_transform = Mat4.identity().times(Mat4.translation(-6, -3, .1)).times(Mat4.scale(.8, .8, 1));
