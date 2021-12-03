@@ -34,6 +34,10 @@ export class BlackJack extends Scene {
                 color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/card_deck.jpg", "NEAREST"),}),
             back: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/Back.jpg", "NEAREST"),}), 
+            fancy_back: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/Fancy/back.png", "NEAREST"),}), 
+            animal_back: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/Animals/back001.png", "NEAREST"),}), 
             // shadow: new Material(new Textured_Phong(), {
             //     color: hex_color("#5D5C5D"), ambient: 0.2, texture: new Texture("assets/tabletop.jpg", "NEAREST"),}),
             shadow: new Material(new defs.Phong_Shader(),
@@ -90,12 +94,28 @@ export class BlackJack extends Scene {
                     worth = 10;
                 if (vals[j] == "A")
                     worth = 11;
-                let fName = "assets/Modern/" + suit[i] + vals[j] + ".png"
+                let fName = "assets/Fancy/" + suit[i] + vals[j] + ".png"
+                var card = {suitVal: suit[i]+vals[j], Worth: worth, Texture: 
+                new Material(new Textured_Phong(),
+                {color: hex_color("#000000"), ambient: 1, texture: new Texture(fName, "NEAREST") })
+                };
+                this.modern_deck.push(card);
+            }
+        }
+        this.animal_deck = new Array();
+        for(var i = 0; i < suit.length; ++i){
+            for(var j = 0; j < vals.length; ++j){
+                var worth = j + 2;
+                if (vals[j] == "J" || vals[j] == "Q" || vals[j] == "K")
+                    worth = 10;
+                if (vals[j] == "A")
+                    worth = 11;
+                let fName = "assets/Animals/" + suit[i] + vals[j] + ".png"
                 var card = {suitVal: suit[i]+vals[j], Worth: worth, Texture: 
                 new Material(new Card_Texture(),
                 {color: hex_color("#000000"), ambient: 1, texture: new Texture(fName, "NEAREST") })
                 };
-                this.modern_deck.push(card);
+                this.animal_deck.push(card);
             }
         }
         for(var i = this.deck.length-1; i > 0; --i){
@@ -106,6 +126,9 @@ export class BlackJack extends Scene {
             var l = this.modern_deck[i];
             this.modern_deck[i] = this.modern_deck[j];
             this.modern_deck[j] = l;
+            var m = this.animal_deck[i];
+            this.animal_deck[i] = this.animal_deck[j];
+            this.animal_deck[j] = m;
         }
 
 
@@ -155,24 +178,24 @@ export class BlackJack extends Scene {
         this.key_triggered_button("Stand", ["S"], () => this.stand = () => 1);
         this.key_triggered_button("Double", ["D"], () => this.double = () => 1);
         this.new_line();
-        this.key_triggered_button("Green Table", ["S"], () => {
+        this.key_triggered_button("Green Table", ["G"], () => {
             this.table_texture = 0;
         });
-        this.key_triggered_button("Blue Table", ["S"], () => {
+        this.key_triggered_button("Blue Table", ["B"], () => {
             this.table_texture = 1;
         });
-        this.key_triggered_button("Red Table", ["S"], () => {
+        this.key_triggered_button("Red Table", ["R"], () => {
             this.table_texture = 2;
         });
         this.new_line();
-        this.key_triggered_button("Classic Deck", ["S"], () => {
+        this.key_triggered_button("Classic Deck", ["C"], () => {
             this.card_texture = 0;
         });
-        this.key_triggered_button("Modern Deck", ["S"], () => {
+        this.key_triggered_button("Fancy Deck", ["F"], () => {
             this.card_texture = 1;
         });
-        this.key_triggered_button("Fun Deck", ["S"], () => {
-            this.card_texture = 1;
+        this.key_triggered_button("Animal Deck", ["A"], () => {
+            this.card_texture = 2;
         });
         this.new_line();
         this.key_triggered_button("Reset", ["R"], () => this.reset = () => 1);
@@ -322,7 +345,15 @@ export class BlackJack extends Scene {
         card_deck_transform = card_deck_transform.times(Mat4.rotation(Math.PI / 2, 0, 1, 0)).times(Mat4.scale(.675, 1.35, 1.05)).times(Mat4.translation(-1, 2.26, 4));
         this.shapes.card_deck.draw(context, program_state, card_deck_transform, this.materials.card_deck);
         card_deck_top_transform = model_transform.times(Mat4.translation(0, 0, 1.01));
-        this.shapes.one_card.draw(context, program_state, card_deck_top_transform, this.materials.back);
+        if (this.card_texture == 0) {
+            this.back = this.materials.back;
+        } else if (this.card_texture == 1) {
+            this.back = this.materials.fancy_back;
+        } else {
+            this.back = this.materials.animal_back;
+        }
+        this.shapes.one_card.draw(context, program_state, card_deck_top_transform, this.back);
+        this.shapes.one_card.draw(context, program_state, card_deck_top_transform, this.back);
         model_transform = model_transform.times(Mat4.translation(-4,-2,-1)).times(Mat4.scale(26/3, 4, 2/3));
         if (this.table_texture == 0) {
             this.shapes.table.draw(context, program_state, model_transform, this.materials.green_table);
@@ -386,7 +417,16 @@ export class BlackJack extends Scene {
             this.c9 = this.modern_c9;
             this.c10 = this.modern_c10;
         } else {
-
+            this.c1 = this.animal_c1;
+            this.c2 = this.animal_c2;
+            this.c3 = this.animal_c3;
+            this.c4 = this.animal_c4;
+            this.c5 = this.animal_c5;
+            this.c6 = this.animal_c6;
+            this.c7 = this.animal_c7;
+            this.c8 = this.animal_c8;
+            this.c9 = this.animal_c9;
+            this.c10 = this.animal_c10;
         }
 
         if(this.deal && this.deal() !== null){
@@ -399,6 +439,10 @@ export class BlackJack extends Scene {
                 this.modern_c2 = this.modern_deck.pop();
                 this.modern_c3 = this.modern_deck.pop();
                 this.modern_c4 = this.modern_deck.pop();
+                this.animal_c1 = this.animal_deck.pop();
+                this.animal_c2 = this.animal_deck.pop();
+                this.animal_c3 = this.animal_deck.pop();
+                this.animal_c4 = this.animal_deck.pop();
                 if (this.card_texture == 0) {
                     this.c1 = this.classic_c1;
                     this.c2 = this.classic_c2;
@@ -410,7 +454,10 @@ export class BlackJack extends Scene {
                     this.c3 = this.modern_c3;
                     this.c4 = this.modern_c4;
                 }  else {
-
+                    this.c1 = this.animal_c1;
+                    this.c2 = this.animal_c2;
+                    this.c3 = this.animal_c3;
+                    this.c4 = this.animal_c4;
                 }
                 this.player_total += this.c1.Worth;
                 this.player_total += this.c2.Worth;
@@ -447,17 +494,17 @@ export class BlackJack extends Scene {
                     this.make_shadow(context, program_state, model_transform);
                 }
                 else if((t-a) < 5){
-                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-4)*-4.7,(t-a-4)*-4.5, 0));
+                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-4)*-4.6,(t-a-4)*-4.5, 0));
                     this.shapes.one_card.draw(context, program_state, model_transform, this.c2.Texture);
                     this.make_shadow(context, program_state, model_transform);
                 }
                 else if((t-a) < 6){
-                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.99-(t-a-5))*1)).times(Mat4.translation(-4.7,-4.5, 0));
+                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.99-(t-a-5))*1)).times(Mat4.translation(-4.6,-4.5, 0));
                     this.shapes.one_card.draw(context, program_state, model_transform, this.c2.Texture);
                     this.make_shadow(context, program_state, model_transform);
                 }
                 else{
-                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.01)).times(Mat4.translation(-4.7, -4.5, 0));
+                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.01)).times(Mat4.translation(-4.6, -4.5, 0));
                     this.shapes.one_card.draw(context, program_state, model_transform, this.c2.Texture);
                     this.make_shadow(context, program_state, model_transform);
                     if((t-a) < 7){
@@ -482,22 +529,22 @@ export class BlackJack extends Scene {
 
                         if((t-a) < 10){
                             model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(t-a-9)*1));
-                            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.back);
+                            this.shapes.one_card.draw(context, program_state, model_transform, this.back);
                             this.make_shadow(context, program_state, model_transform);
                         }
                         else if((t-a) < 11){
-                            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-10)*-4.7,0, 0));
-                            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.back);
+                            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-10)*-4.6,0, 0));
+                            this.shapes.one_card.draw(context, program_state, model_transform, this.back);
                             this.make_shadow(context, program_state, model_transform);
                         }
                         else if((t-a) < 12){
-                            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.99-(t-a-11))*1)).times(Mat4.translation(-4.7,0, 0));
-                            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.back);
+                            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.99-(t-a-11))*1)).times(Mat4.translation(-4.6,0, 0));
+                            this.shapes.one_card.draw(context, program_state, model_transform, this.back);
                             this.make_shadow(context, program_state, model_transform);
                         }
                         else if(!this.stand){
-                            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.01)).times(Mat4.translation(-4.7, 0, 0));
-                            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.back);
+                            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.01)).times(Mat4.translation(-4.6, 0, 0));
+                            this.shapes.one_card.draw(context, program_state, model_transform, this.back);
                             this.make_shadow(context, program_state, model_transform);
                         }
                     }
@@ -513,12 +560,13 @@ export class BlackJack extends Scene {
                 if(this.dealt == 1){
                     this.classic_c5 = this.deck.pop();
                     this.modern_c5 = this.modern_deck.pop();
+                    this.animal_c5 = this.animal_deck.pop();
                     if (this.card_texture == 0) {
                         this.c5 = this.classic_c5;
                     } else if (this.card_texture == 1) {
                         this.c5 = this.modern_c5;
                     }  else {
-
+                        this.c5 = this.animal_c5;
                     }
                     this.player_total += this.c5.Worth;
                     this.dealt = 2;
@@ -529,15 +577,15 @@ export class BlackJack extends Scene {
                 this.shapes.one_card.draw(context, program_state, model_transform, this.c5.Texture);
                 }
                 else if((t-a) < 14){
-                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-13)*-4.4,(t-a-13)*-4.5, 0));
+                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-13)*-4.2,(t-a-13)*-4.5, 0));
                     this.shapes.one_card.draw(context, program_state, model_transform, this.c5.Texture);
                 }
                 else if((t-a) < 15){
-                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.985-(t-a-14))*1)).times(Mat4.translation(-4.4,-4.5, 0));
+                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.985-(t-a-14))*1)).times(Mat4.translation(-4.2,-4.5, 0));
                     this.shapes.one_card.draw(context, program_state, model_transform, this.c5.Texture);
                 }
                 else{
-                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.015)).times(Mat4.translation(-4.4, -4.5, 0));
+                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.015)).times(Mat4.translation(-4.2, -4.5, 0));
                     this.shapes.one_card.draw(context, program_state, model_transform, this.c5.Texture);
                 }
             }
@@ -550,12 +598,13 @@ export class BlackJack extends Scene {
                 if(this.dealt == 2){
                     this.classic_c6 = this.deck.pop();
                     this.modern_c6 = this.modern_deck.pop();
+                    this.animal_c6 = this.animal_deck.pop();
                     if (this.card_texture == 0) {
                         this.c6 = this.classic_c6;
                     } else if (this.card_texture == 1) {
                         this.c6 = this.modern_c6;
                     }  else {
-
+                        this.c6 = this.animal_c6;
                     }
                     this.player_total += this.c6.Worth;
                     this.dealt = 3;
@@ -566,15 +615,15 @@ export class BlackJack extends Scene {
                     this.shapes.one_card.draw(context, program_state, model_transform, this.c6.Texture);
                 }
                 else if((t-a) < 17){
-                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-16)*-4.1,(t-a-16)*-4.5, 0));
+                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-16)*-3.8,(t-a-16)*-4.5, 0));
                     this.shapes.one_card.draw(context, program_state, model_transform, this.c6.Texture);
                 }
                 else if((t-a) < 18){
-                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.98-(t-a-17))*1)).times(Mat4.translation(-4.1,-4.5, 0));
+                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.98-(t-a-17))*1)).times(Mat4.translation(-3.8,-4.5, 0));
                     this.shapes.one_card.draw(context, program_state, model_transform, this.c6.Texture);
                 }
                 else{
-                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.02)).times(Mat4.translation(-4.1, -4.5, 0));
+                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.02)).times(Mat4.translation(-3.8, -4.5, 0));
                     this.shapes.one_card.draw(context, program_state, model_transform, this.c6.Texture);
                 }
             }
@@ -587,12 +636,13 @@ export class BlackJack extends Scene {
                 if(this.dealt == 3){
                     this.classic_c7 = this.deck.pop();
                     this.modern_c7 = this.modern_deck.pop();
+                    this.animal_c7 = this.animal_deck.pop();
                     if (this.card_texture == 0) {
                         this.c7 = this.classic_c7;
                     } else if (this.card_texture == 1) {
                         this.c7 = this.modern_c7;
                     }  else {
-
+                        this.c7 = this.animal_c7;
                     }
                     this.player_total += this.c7.Worth;
                     this.dealt = 4;
@@ -603,15 +653,15 @@ export class BlackJack extends Scene {
                     this.shapes.one_card.draw(context, program_state, model_transform, this.c7.Texture);
                 }
                 else if((t-a) < 20){
-                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-19)*-3.8,(t-a-19)*-4.5, 0));
+                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-19)*-3.4,(t-a-19)*-4.5, 0));
                     this.shapes.one_card.draw(context, program_state, model_transform, this.c7.Texture);
                 }
                 else if((t-a) < 21){
-                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.975-(t-a-20))*1)).times(Mat4.translation(-3.8,-4.5, 0));
+                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.975-(t-a-20))*1)).times(Mat4.translation(-3.4,-4.5, 0));
                     this.shapes.one_card.draw(context, program_state, model_transform, this.c7.Texture);
                 }
                 else{
-                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.025)).times(Mat4.translation(-3.8, -4.5, 0));
+                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.025)).times(Mat4.translation(-3.4, -4.5, 0));
                     this.shapes.one_card.draw(context, program_state, model_transform, this.c7.Texture);
                 }
             }
@@ -638,7 +688,7 @@ export class BlackJack extends Scene {
                     console.log("You win.");
                 }
             }
-            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.01)).times(Mat4.translation(-4.7, 0, 0));
+            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.01)).times(Mat4.translation(-4.6, 0, 0));
             this.shapes.one_card.draw(context, program_state, model_transform, this.c4.Texture);
             //console.log(this.dealer_total);
             if(this.dealer_total < 17 || this.dealer_dealt >= 1){
@@ -646,12 +696,13 @@ export class BlackJack extends Scene {
                     a = t-21;
                     this.classic_c8 = this.deck.pop();
                     this.modern_c8 = this.modern_deck.pop();
+                    this.animal_c8 = this.animal_deck.pop();
                     if (this.card_texture == 0) {
                         this.c8 = this.classic_c8;
                     } else if (this.card_texture == 1) {
                         this.c8 = this.modern_c8;
                     }  else {
-
+                        this.c8 = this.animal_c8;
                     }
                     this.dealer_total += this.c8.Worth;
                     this.dealer_dealt = 1;
@@ -661,15 +712,15 @@ export class BlackJack extends Scene {
                     this.shapes.one_card.draw(context, program_state, model_transform, this.c8.Texture);
                 }
                 else if((t-a) < 23){
-                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-22)*-4.4,0, 0));
+                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-22)*-4.2,0, 0));
                     this.shapes.one_card.draw(context, program_state, model_transform, this.c8.Texture);
                 }
                 else if((t-a) < 24){
-                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.985-(t-a-23))*1)).times(Mat4.translation(-4.4,0, 0));
+                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.985-(t-a-23))*1)).times(Mat4.translation(-4.2,0, 0));
                     this.shapes.one_card.draw(context, program_state, model_transform, this.c8.Texture);
                 }
                 else{
-                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.015)).times(Mat4.translation(-4.4, 0, 0));
+                    model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.015)).times(Mat4.translation(-4.2, 0, 0));
                     this.shapes.one_card.draw(context, program_state, model_transform, this.c8.Texture);
                 }
                 if((this.dealer_total < 17 || this.dealer_dealt >= 2) && (t-a) > 24){
@@ -677,12 +728,13 @@ export class BlackJack extends Scene {
                         a = t-24;
                         this.classic_c9 = this.deck.pop();
                         this.modern_c9 = this.modern_deck.pop();
+                        this.animal_c9 = this.animal_deck.pop();
                         if (this.card_texture == 0) {
                             this.c9 = this.classic_c9;
                         } else if (this.card_texture == 1) {
                             this.c9 = this.modern_c9;
                         }  else {
-
+                            this.c9 = this.animal_c9;
                         }
                         this.dealer_total += this.c9.Worth;
                         this.dealer_dealt = 2;
@@ -692,15 +744,15 @@ export class BlackJack extends Scene {
                         this.shapes.one_card.draw(context, program_state, model_transform, this.c9.Texture);
                     }
                     else if((t-a) < 26){
-                        model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-25)*-4.1,0, 0));
+                        model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-25)*-3.8,0, 0));
                         this.shapes.one_card.draw(context, program_state, model_transform, this.c9.Texture);
                     }
                     else if((t-a) < 27){
-                        model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.98-(t-a-26))*1)).times(Mat4.translation(-4.1,0, 0));
+                        model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.98-(t-a-26))*1)).times(Mat4.translation(-3.8,0, 0));
                         this.shapes.one_card.draw(context, program_state, model_transform, this.c9.Texture);
                     }
                     else{
-                        model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.02)).times(Mat4.translation(-4.1, 0, 0));
+                        model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.02)).times(Mat4.translation(-3.8, 0, 0));
                         this.shapes.one_card.draw(context, program_state, model_transform, this.c9.Texture);
                     }
                     if((this.dealer_total < 17 || this.dealer_dealt >= 3) && (t-a) > 27){
@@ -708,12 +760,13 @@ export class BlackJack extends Scene {
                             a = t-27;
                             this.classic_c10 = this.deck.pop();
                             this.modern_c10 = this.modern_deck.pop();
+                            this.animal_c10 = this.animal_deck.pop();
                             if (this.card_texture == 0) {
                                 this.c10 = this.classic_c10;
                             } else if (this.card_texture == 1) {
                                 this.c10 = this.modern_c10;
                             }  else {
-
+                                this.c10 = this.animal_c10;
                             }
                             this.dealer_total += this.c10.Worth;
                             this.dealer_dealt = 3;
@@ -723,15 +776,15 @@ export class BlackJack extends Scene {
                             this.shapes.one_card.draw(context, program_state, model_transform, this.c10.Texture);
                         }
                         else if((t-a) < 29){
-                            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-28)*-3.8,0, 0));
+                            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-28)*-3.4,0, 0));
                             this.shapes.one_card.draw(context, program_state, model_transform, this.c10.Texture);
                         }
                         else if((t-a) < 30){
-                            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.975-(t-a-29))*1)).times(Mat4.translation(-3.8,0, 0));
+                            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.975-(t-a-29))*1)).times(Mat4.translation(-3.4,0, 0));
                             this.shapes.one_card.draw(context, program_state, model_transform, this.c10.Texture);
                         }
                         else{
-                            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.025)).times(Mat4.translation(-3.8, 0, 0));
+                            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.025)).times(Mat4.translation(-3.4, 0, 0));
                             this.shapes.one_card.draw(context, program_state, model_transform, this.c10.Texture);
                         }
                 }
