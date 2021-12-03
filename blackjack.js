@@ -33,7 +33,7 @@ export class BlackJack extends Scene {
             player: new Material(new defs.Phong_Shader(),
                 {ambient: 1, diffusivity: 1, color: hex_color("#ffffff")}),
             card_deck: new Material(new Textured_Phong(), {
-                color: hex_color("#000000"), ambient: .3, specularity: .5, diffusivity: 1, texture: new Texture("assets/cards/card_deck.jpg", "NEAREST"),}),
+                color: hex_color("#000000"), ambient: .7, specularity: .5, diffusivity: 1, texture: new Texture("assets/cards/card_deck.jpg", "NEAREST"),}),
             back: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"), ambient: .5, specularity: 1, texture: new Texture("assets/cards/Back.jpg", "NEAREST"),}), 
             fancy_back: new Material(new Textured_Phong(), {
@@ -337,7 +337,7 @@ export class BlackJack extends Scene {
         let card_deck_top_transform = model_transform;
         let card_deck_transform = model_transform;
 
-        const light_position = vec4(0, 0, 8, 1);  
+        const light_position = vec4(0, 0, 15, 1);  
         // The parameters of the Light are: position, color, size
         program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 1000)];
         let background_transform = Mat4.identity().times(Mat4.rotation(Math.PI / 3.5, 1, 0, 0)).times(Mat4.scale(30, 20, 1)).times(Mat4.translation(0, 0, -10));
