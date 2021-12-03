@@ -899,6 +899,70 @@ export class BlackJack extends Scene {
             this.bet = 0;
             this.add = 0;
             this.double = 0;
+            if(this.deck.length < 10){
+                var suit = ["s", "h", "d", "c"];
+                var vals = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
+                this.deck = new Array();
+                for(var i = 0; i < suit.length; ++i){
+                    for(var j = 0; j < vals.length; ++j){
+                        var worth = j + 2;
+                        if (vals[j] == "J" || vals[j] == "Q" || vals[j] == "K")
+                            worth = 10;
+                        if (vals[j] == "A")
+                            worth = 11;
+                        let fName = "assets/cards/" + suit[i] + vals[j] + ".png"
+                        var card = {suitVal: suit[i]+vals[j], Worth: worth, Texture: 
+                        new Material(new Card_Texture(),
+                        {color: hex_color("#000000"), ambient: 1, texture: new Texture(fName, "NEAREST") })
+                        };
+                        this.deck.push(card);
+                    }
+                }
+                this.modern_deck = new Array();
+                for(var i = 0; i < suit.length; ++i){
+                    for(var j = 0; j < vals.length; ++j){
+                        var worth = j + 2;
+                        if (vals[j] == "J" || vals[j] == "Q" || vals[j] == "K")
+                            worth = 10;
+                        if (vals[j] == "A")
+                            worth = 11;
+                        let fName = "assets/Fancy/" + suit[i] + vals[j] + ".png"
+                        var card = {suitVal: suit[i]+vals[j], Worth: worth, Texture: 
+                        new Material(new Textured_Phong(),
+                        {color: hex_color("#000000"), ambient: 1, texture: new Texture(fName, "NEAREST") })
+                        };
+                        this.modern_deck.push(card);
+                    }
+                }
+                this.animal_deck = new Array();
+                for(var i = 0; i < suit.length; ++i){
+                    for(var j = 0; j < vals.length; ++j){
+                        var worth = j + 2;
+                        if (vals[j] == "J" || vals[j] == "Q" || vals[j] == "K")
+                            worth = 10;
+                        if (vals[j] == "A")
+                            worth = 11;
+                        let fName = "assets/Animals/" + suit[i] + vals[j] + ".png"
+                        var card = {suitVal: suit[i]+vals[j], Worth: worth, Texture: 
+                        new Material(new Card_Texture(),
+                        {color: hex_color("#000000"), ambient: 1, texture: new Texture(fName, "NEAREST") })
+                        };
+                        this.animal_deck.push(card);
+                    }
+                }
+                for(var i = this.deck.length-1; i > 0; --i){
+                    var j = Math.floor(Math.random() * (i + 1));
+                    var k = this.deck[i];
+                    this.deck[i] = this.deck[j];
+                    this.deck[j] = k;
+                    var l = this.modern_deck[i];
+                    this.modern_deck[i] = this.modern_deck[j];
+                    this.modern_deck[j] = l;
+                    var m = this.animal_deck[i];
+                    this.animal_deck[i] = this.animal_deck[j];
+                    this.animal_deck[j] = m;
+                }        
+            }
             this.reset = 0;
         }
         if(this.double && this.double() !== null && this.dealt == 1 && this.dealer_dealt == -2){
