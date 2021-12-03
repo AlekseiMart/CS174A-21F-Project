@@ -883,7 +883,25 @@ export class BlackJack extends Scene {
             this.double = 0;
             this.bet = 0;
             this.add = 0;
+            this.double = 0;
             this.reset = 0;
+        }
+        if(this.double && this.double() !== null && this.dealt == 1 && this.dealer_dealt == -2){
+                if(this.balance >= this.bet){
+                        this.balance -= this.bet;
+                        this.bet += this.bet;
+                        this.hit1 = () => 1;
+                        if(this.player_total > 21){
+                            let text1_transform = Mat4.identity().times(Mat4.translation(-4, 0, .1)).times(Mat4.scale(.5, .5, 1));
+                            this.shapes.lost.set_string("You Lost", context.context);
+                            this.shapes.lost.draw(context, program_state, text1_transform, this.materials.text);
+                            console.log("You lose.");
+                        }
+                        else{
+                            this.stand = () => 1;
+                        }
+                }
+                this.double = 0;
         }
         this.card_test_transform = Mat4.translation(0, 0, 2);
         /*this.shapes.card_test.arrays.texture_coord.forEach(
