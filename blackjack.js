@@ -67,7 +67,7 @@ export class BlackJack extends Scene {
             text: new Material(new Textured_Phong(), {
                 ambient: 1, diffusivity: 0, specularity: 0, texture: new Texture("assets/text.png")}),
             text_background: new Material(new defs.Phong_Shader(),
-                {ambient: 1, diffusivity: 0, color: hex_color("242424")}),
+                {ambient: 1, diffusivity: 0, specularity: 0, color: hex_color("242424")}),
         }
         //card deck creation + card textures
         var suit = ["s", "h", "d", "c"];
@@ -163,7 +163,8 @@ export class BlackJack extends Scene {
         let possible_bets = [1, 10, 50, 100];       // modify to add any number of bets
         for (let i = 0; i < possible_bets.length; i++) {
             let cur_bet = possible_bets[i];
-            this.key_triggered_button("Bet " + cur_bet, [i+1], () => {
+            let num = i+5;
+            this.key_triggered_button("Bet " + cur_bet, [num.toString()], () => {
                 if(this.dealt == -1){
                     if (cur_bet > this.balance) return;
                     this.balance -= cur_bet;
@@ -176,34 +177,34 @@ export class BlackJack extends Scene {
 
         this.key_triggered_button("Deal Cards", ["0"], () => this.deal = () => 1);
         this.new_line();
-        this.key_triggered_button("HitFirst", ["H"], () => this.hit1 = () => 1);
-        this.key_triggered_button("HitSecond", ["J"], () => this.hit2 = () => 1);
-        this.key_triggered_button("HitThird", ["K"], () => this.hit3 = () => 1);
+        this.key_triggered_button("HitFirst", ["h"], () => this.hit1 = () => 1);
+        this.key_triggered_button("HitSecond", ["j"], () => this.hit2 = () => 1);
+        this.key_triggered_button("HitThird", ["k"], () => this.hit3 = () => 1);
         this.new_line();
-        this.key_triggered_button("Stand", ["S"], () => this.stand = () => 1);
-        this.key_triggered_button("Double", ["D"], () => this.double = () => 1);
+        this.key_triggered_button("Stand", ["n"], () => this.stand = () => 1);
+        this.key_triggered_button("Double", ["m"], () => this.double = () => 1);
         this.new_line();
-        this.key_triggered_button("Green Table", ["G"], () => {
+        this.key_triggered_button("Green Table", ["g"], () => {
             this.table_texture = 0;
         });
-        this.key_triggered_button("Blue Table", ["B"], () => {
+        this.key_triggered_button("Blue Table", ["b"], () => {
             this.table_texture = 1;
         });
-        this.key_triggered_button("Red Table", ["R"], () => {
+        this.key_triggered_button("Red Table", ["v"], () => {
             this.table_texture = 2;
         });
         this.new_line();
-        this.key_triggered_button("Classic Deck", ["C"], () => {
+        this.key_triggered_button("Classic Deck", ["i"], () => {
             this.card_texture = 0;
         });
-        this.key_triggered_button("Fancy Deck", ["F"], () => {
+        this.key_triggered_button("Fancy Deck", ["o"], () => {
             this.card_texture = 1;
         });
-        this.key_triggered_button("Animal Deck", ["A"], () => {
+        this.key_triggered_button("Animal Deck", ["p"], () => {
             this.card_texture = 2;
         });
         this.new_line();
-        this.key_triggered_button("Reset", ["R"], () => this.reset = () => 1);
+        this.key_triggered_button("Reset", ["9"], () => this.reset = () => 1);
     }
 
     make_shadow(context, program_state, model_transform) {
