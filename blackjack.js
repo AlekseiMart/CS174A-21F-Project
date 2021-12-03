@@ -33,6 +33,8 @@ export class BlackJack extends Scene {
                 color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/card_deck.jpg", "NEAREST"),}),
             back: new Material(new Textured_Phong(), {
                 color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/cards/Back.jpg", "NEAREST"),}), 
+            fancy_back: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"), ambient: 1, texture: new Texture("assets/Fancy/back.png", "NEAREST"),}), 
             // shadow: new Material(new Textured_Phong(), {
             //     color: hex_color("#5D5C5D"), ambient: 0.2, texture: new Texture("assets/tabletop.jpg", "NEAREST"),}),
             shadow: new Material(new defs.Phong_Shader(),
@@ -89,9 +91,9 @@ export class BlackJack extends Scene {
                     worth = 10;
                 if (vals[j] == "A")
                     worth = 11;
-                let fName = "assets/Modern/" + suit[i] + vals[j] + ".png"
+                let fName = "assets/Fancy/" + suit[i] + vals[j] + ".png"
                 var card = {suitVal: suit[i]+vals[j], Worth: worth, Texture: 
-                new Material(new Card_Texture(),
+                new Material(new Textured_Phong(),
                 {color: hex_color("#000000"), ambient: 1, texture: new Texture(fName, "NEAREST") })
                 };
                 this.modern_deck.push(card);
@@ -144,23 +146,23 @@ export class BlackJack extends Scene {
         this.key_triggered_button("Stand", ["S"], () => this.stand = () => 1);
         this.key_triggered_button("Double", ["D"], () => this.double = () => 1);
         this.new_line();
-        this.key_triggered_button("Green Table", ["S"], () => {
+        this.key_triggered_button("Green Table", ["G"], () => {
             this.table_texture = 0;
         });
-        this.key_triggered_button("Blue Table", ["S"], () => {
+        this.key_triggered_button("Blue Table", ["B"], () => {
             this.table_texture = 1;
         });
-        this.key_triggered_button("Red Table", ["S"], () => {
+        this.key_triggered_button("Red Table", ["R"], () => {
             this.table_texture = 2;
         });
         this.new_line();
-        this.key_triggered_button("Classic Deck", ["S"], () => {
+        this.key_triggered_button("Classic Deck", ["C"], () => {
             this.card_texture = 0;
         });
-        this.key_triggered_button("Modern Deck", ["S"], () => {
+        this.key_triggered_button("Fancy Deck", ["F"], () => {
             this.card_texture = 1;
         });
-        this.key_triggered_button("Fun Deck", ["S"], () => {
+        this.key_triggered_button("Fun Deck", ["F"], () => {
             this.card_texture = 1;
         });
         this.new_line();
@@ -312,7 +314,15 @@ export class BlackJack extends Scene {
         card_deck_transform = card_deck_transform.times(Mat4.rotation(Math.PI / 2, 0, 1, 0)).times(Mat4.scale(.675, 1.35, 1.05)).times(Mat4.translation(-1, 2.26, 4));
         this.shapes.card_deck.draw(context, program_state, card_deck_transform, this.materials.card_deck);
         card_deck_top_transform = model_transform.times(Mat4.translation(0, 0, 1.01));
-        this.shapes.one_card.draw(context, program_state, card_deck_top_transform, this.materials.back);
+        if (this.card_texture == 0) {
+            this.back = this.materials.back;
+        } else if (this.card_texture == 1) {
+            this.back = this.materials.fancy_back;
+        } else {
+
+        }
+        this.shapes.one_card.draw(context, program_state, card_deck_top_transform, this.back);
+        this.shapes.one_card.draw(context, program_state, card_deck_top_transform, this.back);
         model_transform = model_transform.times(Mat4.translation(-4,-2,-1)).times(Mat4.scale(26/3, 4, 2/3));
         if (this.table_texture == 0) {
             this.shapes.table.draw(context, program_state, model_transform, this.materials.green_table);
@@ -460,22 +470,22 @@ export class BlackJack extends Scene {
 
                         if((t-a) < 10){
                             model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(t-a-9)*1));
-                            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.back);
+                            this.shapes.one_card.draw(context, program_state, model_transform, this.back);
                             this.make_shadow(context, program_state, model_transform);
                         }
                         else if((t-a) < 11){
                             model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,1)).times(Mat4.translation((t-a-10)*-4.7,0, 0));
-                            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.back);
+                            this.shapes.one_card.draw(context, program_state, model_transform, this.back);
                             this.make_shadow(context, program_state, model_transform);
                         }
                         else if((t-a) < 12){
                             model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,(.99-(t-a-11))*1)).times(Mat4.translation(-4.7,0, 0));
-                            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.back);
+                            this.shapes.one_card.draw(context, program_state, model_transform, this.back);
                             this.make_shadow(context, program_state, model_transform);
                         }
                         else if(!this.stand){
                             model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.01)).times(Mat4.translation(-4.7, 0, 0));
-                            this.shapes.one_card.draw(context, program_state, model_transform, this.materials.back);
+                            this.shapes.one_card.draw(context, program_state, model_transform, this.back);
                             this.make_shadow(context, program_state, model_transform);
                         }
                     }
