@@ -566,7 +566,7 @@ export class BlackJack extends Scene {
             }
         }
 
-        if(this.hit1 && this.hit1() !== null){
+        if(this.hit1 && this.hit1() !== null && this.dealer_dealt == -2){
             if(!this.deal){
                 this.hit1 = 0;
             }
@@ -608,7 +608,7 @@ export class BlackJack extends Scene {
                 }
             }
         }
-        if(this.hit2 && this.hit2() !== null){
+        if(this.hit2 && this.hit2() !== null && this.dealer_dealt == -2){
             if(!this.deal || !this.hit1){
                 this.hit2 = 0;
             }
@@ -650,7 +650,7 @@ export class BlackJack extends Scene {
                 }
             }
         }
-        if(this.hit3 && this.hit3() !== null){
+        if(this.hit3 && this.hit3() !== null && this.dealer_dealt == -2){
             if(!this.deal || !this.hit2){
                 this.hit3 = 0;
             }
