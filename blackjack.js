@@ -358,16 +358,27 @@ export class BlackJack extends Scene {
             model_transform = model_transform.times(Mat4.scale(1.71, 1.71, 8));
             this.shapes.tableedge.draw(context, program_state, model_transform, this.materials.red_tableedge);
         }
-        
+        let player_text = '';
+        let dealer_text = '';
         if (this.dealt > 0) {
-            let player_text = this.player_total.toString();
-            let dealer_text = this.dealer_total.toString();
+            if (this.player_total < 10) {
+                let temp = '0';
+                player_text = temp.concat(this.player_total.toString());
+            } else {
+                player_text = this.player_total.toString();
+            }
+            if (this.dealer_total < 10) {
+                let temp = '0';
+                dealer_text = temp.concat(this.dealer_total.toString());
+            } else {
+                dealer_text = this.dealer_total.toString();
+            }
             let text_transform = Mat4.identity().times(Mat4.translation(-6, -3, .1)).times(Mat4.scale(.8, .8, 1));
-            this.shapes.one_card.draw(context, program_state, text_transform.times(Mat4.translation(0.72,.1,-0.05)).times(Mat4.scale(1.5, 1.1, 1)), this.materials.text_background);
+            this.shapes.one_card.draw(context, program_state, text_transform.times(Mat4.translation(0.75,.1,-0.05)).times(Mat4.scale(1.5, 1.1, 1)), this.materials.text_background);
             this.shapes.text.set_string(player_text, context.context);
             this.shapes.text.draw(context, program_state, text_transform, this.materials.text);
             text_transform = text_transform.times(Mat4.translation(0, 7, 0));
-            this.shapes.one_card.draw(context, program_state, text_transform.times(Mat4.translation(0.72,.1,-0.05)).times(Mat4.scale(1.5, 1.1, 1)), this.materials.text_background);
+            this.shapes.one_card.draw(context, program_state, text_transform.times(Mat4.translation(0.75,.1,-0.05)).times(Mat4.scale(1.5, 1.1, 1)), this.materials.text_background);
             this.shapes.text.set_string(dealer_text, context.context);
             this.shapes.text.draw(context, program_state, text_transform, this.materials.text);
         }
