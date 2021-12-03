@@ -996,6 +996,9 @@ export class BlackJack extends Scene {
                     this.animal_deck[j] = m;
                 }        
             }
+            this.win_state = -2;         // 0 = tie, -1 = loss, 1 = win, -2 = unset
+            this.time_at_end = -1;      // program time at which win_state is determined
+            this.time_before_resetting = 10     // 10 seconds before auto resetting
             this.reset = 0;
         }
         if(this.double && this.double() !== null && this.dealt == 1 && this.dealer_dealt == -2){
