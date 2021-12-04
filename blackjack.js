@@ -1006,6 +1006,21 @@ export class BlackJack extends Scene {
                         this.balance -= this.bet;
                         this.bet += this.bet;
                         this.hit1 = () => 1;
+                        if(this.dealt == 1){
+                                this.classic_c5 = this.deck.pop();
+                                this.modern_c5 = this.modern_deck.pop();
+                                this.animal_c5 = this.animal_deck.pop();
+                                if (this.card_texture == 0) {
+                                        this.c5 = this.classic_c5;
+                                } else if (this.card_texture == 1) {
+                                this.c5 = this.modern_c5;
+                                }  else {
+                                        this.c5 = this.animal_c5;
+                                }
+                                this.player_total += this.c5.Worth;
+                                this.dealt = 2;
+                                a = t-12;
+                        }
                         if(this.player_total > 21){
                             this.win_state = -1;
                             let text1_transform = Mat4.identity().times(Mat4.translation(-4, 0, .1)).times(Mat4.scale(.5, .5, 1));
@@ -1014,6 +1029,9 @@ export class BlackJack extends Scene {
                             console.log("You lose.");
                         }
                         else{
+                            model_transform = Mat4.identity().times(Mat4.scale(1.7, 1.7, 1.7)).times(Mat4.scale(1.05, 1.35, 2)).times(Mat4.translation(4.02,2.26,.01)).times(Mat4.translation(-4.6, 0, 0));
+                            this.shapes.one_card.draw(context, program_state, model_transform, this.c4.Texture);
+                            this.make_shadow(context, program_state, model_transform);
                             this.stand = () => 1;
                         }
                 }
