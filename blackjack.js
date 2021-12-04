@@ -180,9 +180,9 @@ export class BlackJack extends Scene {
 
         this.key_triggered_button("Deal Cards", ["0"], () => this.deal = () => 1);
         this.new_line();
-        this.key_triggered_button("HitFirst", ["h"], () => this.hit1 = () => 1);
-        this.key_triggered_button("HitSecond", ["j"], () => this.hit2 = () => 1);
-        this.key_triggered_button("HitThird", ["k"], () => this.hit3 = () => 1);
+        this.key_triggered_button("HitFirst", ["h"], () => {if (this.win_state == -2) {this.hit1 = () => 1}});
+        this.key_triggered_button("HitSecond", ["j"], () => {if (this.win_state == -2) {this.hit2 = () => 1}});
+        this.key_triggered_button("HitThird", ["k"], () => {if (this.win_state == -2) {this.hit3 = () => 1}});
         this.new_line();
         this.key_triggered_button("Stand", ["n"], () => {if (this.dealt > 0 && this.win_state == -2) {this.stand = () => 1}});
         this.key_triggered_button("Double", ["m"], () => this.double = () => 1);
